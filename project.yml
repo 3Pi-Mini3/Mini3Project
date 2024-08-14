@@ -1,0 +1,46 @@
+name: Mini3Project
+settings:
+  MARKETING_VERSION: "1.0"
+  CURRENT_PROJECT_VERSION: 1
+options:
+  bundleIdPrefix: com.example
+packages:
+  GoogleGenerativeAI:
+    url: https://github.com/google-gemini/generative-ai-swift.git
+    minorVersion: 0.5.5
+  Lottie:
+    url: https://github.com/airbnb/lottie-spm.git
+    minorVersion: 4.5.0
+targets:
+  Mini3Project:
+    type: application
+    platform: iOS
+    sources: [Mini3Project]
+    resources: [Resources]
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.example.Mini3Project
+      INFOPLIST_FILE: Mini3Project/Info.plist
+    dependencies:
+        - package: GoogleGenerativeAI
+        - package: Lottie
+  Mini3Project-Tests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Mini3Project-Tests]
+    dependencies:
+      - target: Mini3Project
+    settings:
+      base:
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Mini3Project.app/Mini3Project"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  Mini3Project:
+    build:
+      targets:
+        Mini3Project: all
+        Mini3Project-Tests: all
+    test:
+        targets:
+        - name: Mini3Project-Tests
+        gatherCoverageData: true
