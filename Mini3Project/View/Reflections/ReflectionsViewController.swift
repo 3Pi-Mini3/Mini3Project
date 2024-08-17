@@ -1,17 +1,13 @@
 import UIKit
-
-class ReflectionsViewModel {
-    let currentDate: Date = Date()
-}
+import Combine
 
 class ReflectionsViewController: UIViewController {
     // MARK: - UI Elements
     private let reflectionButton: UIButton = UIButton()
     private let dateLabel: UILabel = UILabel()
     
-    let reflectionsViewModel = ReflectionsViewModel()
-    
-    private let currentDate: Date = Date()
+    var viewModel: ReflectionsViewModel = ReflectionsViewModel()
+    private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -19,6 +15,7 @@ class ReflectionsViewController: UIViewController {
         configureView()
         configureReflectionButton()
         configureDateLabel()
+        bindViewModel()
     }
     
     // MARK: - View Configuration
@@ -36,8 +33,14 @@ class ReflectionsViewController: UIViewController {
         reflectionButton.addTarget(self, action: #selector(goToReflectionDetail), for: .touchUpInside)
         
         view.addSubview(reflectionButton)
-        setReflectionButtonConstraints()
-    }
+        reflectionButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            reflectionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            reflectionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 50),
+            reflectionButton.widthAnchor.constraint(equalToConstant: 200),
+            reflectionButton.heightAnchor.constraint(equalToConstant: 50)
+        ])    }
     
     private func configureDateLabel() {
         dateLabel.text = getCurrentDateFormatted()
@@ -50,36 +53,22 @@ class ReflectionsViewController: UIViewController {
         dateLabel.addGestureRecognizer(tapGesture)
         
         view.addSubview(dateLabel)
-        setDateLabelConstraints()
-    }
-    
-    // MARK: - Constraints
-    private func setReflectionButtonConstraints() {
-        reflectionButton.translatesAutoresizingMaskIntoConstraints = false
         
-        NSLayoutConstraint.activate([
-            reflectionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            reflectionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 50),
-            reflectionButton.widthAnchor.constraint(equalToConstant: 200),
-            reflectionButton.heightAnchor.constraint(equalToConstant: 50)
-        ])
-    }
-    
-    private func setDateLabelConstraints() {
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             dateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            dateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            dateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             dateLabel.bottomAnchor.constraint(equalTo: reflectionButton.topAnchor, constant: -20)
         ])
     }
     
     // MARK: - Helpers
     private func getCurrentDateFormatted() -> String {
-        let selectedDate = self.currentDate
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM, yyyy"
-        return dateFormatter.string(from: selectedDate)
+        return dateFormatter.string(from: viewModel.currentDate)
     }
     
     // MARK: - Actions
@@ -92,9 +81,9 @@ class ReflectionsViewController: UIViewController {
     @objc private func openDatePicker() {
         let datePickerViewController = ReflectionsDatePickerViewController()
         datePickerViewController.modalPresentationStyle = .popover
-        datePickerViewController.preferredContentSize = CGSize(width: 320, height: 260)
-        datePickerViewController.currentDate = self.currentDate
-
+        datePickerViewController.preferredContentSize = CGSize(width: 320, height: 248)
+        datePickerViewController.viewModel = viewModel
+        
         if let popover = datePickerViewController.popoverPresentationController {
             popover.sourceView = dateLabel
             popover.sourceRect = dateLabel.bounds
@@ -104,7 +93,17 @@ class ReflectionsViewController: UIViewController {
         
         present(datePickerViewController, animated: true, completion: nil)
     }
+    
+    private func bindViewModel() {
+        viewModel.$currentDate
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newDate in
+                self?.dateLabel.text = self?.getCurrentDateFormatted()
+            }
+            .store(in: &cancellables)
+    }
 }
+
 
 // MARK: - UIPopoverPresentationControllerDelegate
 extension UIViewController: UIPopoverPresentationControllerDelegate {

@@ -1,10 +1,15 @@
 import UIKit
 
 class ReflectionsDatePickerViewController: UIViewController {
-    var currentDate: Date?
+    var viewModel: ReflectionsViewModel?
     
     private let datePickerStack = UIStackView()
+    
     private let yearPickerStack = UIStackView()
+    private let yearLabel = UILabel()
+    private let leftArrowButton = UIButton()
+    private let rightArrowButton = UIButton()
+    
     private let monthPickerStack = UIStackView()
     
     override func viewDidLoad() {
@@ -23,7 +28,7 @@ class ReflectionsDatePickerViewController: UIViewController {
     
     private func configureDatePickerStack() {
         datePickerStack.axis = .vertical
-        datePickerStack.distribution = .equalSpacing
+        datePickerStack.spacing = 24
         datePickerStack.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(datePickerStack)
@@ -32,18 +37,33 @@ class ReflectionsDatePickerViewController: UIViewController {
             datePickerStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 36),
             datePickerStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             datePickerStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            datePickerStack.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -24),
         ])
     }
     
     // MARK: - Year Picker Configuration
     
     private func configureYearPicker() {
-        let yearLabel = createYearLabel(text: "2024")
-        let leftArrowButton = createArrowButton(direction: "left", symbolSize: 22)
-        let rightArrowButton = createArrowButton(direction: "right", symbolSize: 22)
+        guard let viewModel = viewModel else { return }
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy"
+        let yearString = dateFormatter.string(from: viewModel.currentDate)
+        
+        yearLabel.text = yearString
+        yearLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
+        yearLabel.textColor = .black
+        yearLabel.textAlignment = .center
+        yearLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        leftArrowButton.setImage(UIImage(systemName: "arrowtriangle.left.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 22, weight: .regular)), for: .normal)
+        leftArrowButton.tintColor = .black
+        leftArrowButton.translatesAutoresizingMaskIntoConstraints = false
         leftArrowButton.addTarget(self, action: #selector(previousYear), for: .touchUpInside)
+        
+        
+        rightArrowButton.setImage(UIImage(systemName: "arrowtriangle.right.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 22, weight: .regular)), for: .normal)
+        rightArrowButton.tintColor = .black
+        rightArrowButton.translatesAutoresizingMaskIntoConstraints = false
         rightArrowButton.addTarget(self, action: #selector(nextYear), for: .touchUpInside)
         
         let yearPickerStackView = UIStackView(arrangedSubviews: [leftArrowButton, yearLabel, rightArrowButton])
@@ -52,37 +72,6 @@ class ReflectionsDatePickerViewController: UIViewController {
         
         yearPickerStack.addArrangedSubview(yearPickerStackView)
         datePickerStack.addArrangedSubview(yearPickerStack)
-    }
-    
-    private func createYearLabel(text: String) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.font = UIFont.systemFont(ofSize: 22, weight: .bold)
-        label.textColor = .black
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }
-    
-    private func createArrowButton(direction: String, symbolSize: CGFloat) -> UIButton {
-        let button = UIButton(type: .system)
-        let imageName: String
-        switch direction {
-        case "left":
-            imageName = "arrowtriangle.left.fill"
-        case "right":
-            imageName = "arrowtriangle.right.fill"
-        default:
-            imageName = "arrowtriangle.left.fill"
-        }
-        
-        let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: symbolSize, weight: .regular)
-        let image = UIImage(systemName: imageName, withConfiguration: symbolConfiguration)
-        
-        button.setImage(image, for: .normal)
-        button.tintColor = .black
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
     }
     
     // MARK: - Month Picker Configuration
@@ -106,21 +95,46 @@ class ReflectionsDatePickerViewController: UIViewController {
         }
         
         datePickerStack.addArrangedSubview(monthPickerStack)
+        
+        updateMonthLabels()
     }
     
     private func createMonthLabelView(with month: String) -> UIView {
         let labelView = UIView()
-        labelView.backgroundColor = .systemBlue
+        
+        guard let viewModel = viewModel else { return UIView() }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM"
+        let currentMonth = dateFormatter.string(from: viewModel.currentDate)
+        
+        if month == currentMonth {
+            labelView.backgroundColor = .systemBlue
+        } else {
+            labelView.backgroundColor = .clear
+        }
+        
         labelView.layer.cornerRadius = 4
         
         let label = UILabel()
         label.text = month
-        label.textColor = .white
+        
+        if month == currentMonth {
+            label.textColor = .white
+            label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        } else {
+            label.textColor = .black
+            label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        }
+        
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         labelView.addSubview(label)
+        
+        // Add tap gesture recognizer to the label view
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(monthTapped(_:)))
+        labelView.addGestureRecognizer(tapGesture)
         
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: labelView.topAnchor, constant: 12),
@@ -132,13 +146,75 @@ class ReflectionsDatePickerViewController: UIViewController {
         return labelView
     }
     
+    
+    
     // MARK: - Actions
     
     @objc private func previousYear() {
-        // Handle navigation to the previous year
+        guard let viewModel = viewModel else { return }
+        
+        let calendar = Calendar.current
+        if let newDate = calendar.date(byAdding: .year, value: -1, to: viewModel.currentDate) {
+            viewModel.currentDate = newDate
+            updateYearLabel()
+        }
     }
     
     @objc private func nextYear() {
-        // Handle navigation to the next year
+        guard let viewModel = viewModel else { return }
+        
+        let calendar = Calendar.current
+        if let newDate = calendar.date(byAdding: .year, value: 1, to: viewModel.currentDate) {
+            viewModel.currentDate = newDate
+            updateYearLabel()
+        }
+    }
+    
+    @objc private func monthTapped(_ sender: UITapGestureRecognizer) {
+        guard let labelView = sender.view,
+              let label = labelView.subviews.first(where: { $0 is UILabel }) as? UILabel,
+              let monthText = label.text,
+              let viewModel = viewModel else { return }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM"
+        
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year], from: viewModel.currentDate)
+        
+        // Create new date with selected month and current year
+        let newDateString = "\(monthText) \(components.year!)"
+        dateFormatter.dateFormat = "MMM yyyy"
+        if let newDate = dateFormatter.date(from: newDateString) {
+            viewModel.currentDate = newDate
+            updateMonthLabels()
+        }
+    }
+    
+    private func updateYearLabel() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy"
+        let yearString = dateFormatter.string(from: viewModel?.currentDate ?? Date())
+        
+        yearLabel.text = yearString
+    }
+    
+    private func updateMonthLabels() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM"
+        let currentMonth = dateFormatter.string(from: viewModel?.currentDate ?? Date())
+        
+        for subview in monthPickerStack.arrangedSubviews {
+            if let stackView = subview as? UIStackView {
+                for monthView in stackView.arrangedSubviews {
+                    if let label = monthView.subviews.first(where: { $0 is UILabel }) as? UILabel {
+                        let isSelected = label.text == currentMonth
+                        monthView.backgroundColor = isSelected ? .systemBlue : .clear
+                        label.textColor = isSelected ? .white : .black
+                        label.font = isSelected ? UIFont.systemFont(ofSize: 17, weight: .semibold) : UIFont.systemFont(ofSize: 17, weight: .regular)
+                    }
+                }
+            }
+        }
     }
 }
