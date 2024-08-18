@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         self.window = UIWindow(windowScene: windowScene)
         
-        let mainViewController = MainViewController()
+        let mainViewController = CustomTabBarController()
         
         let navigation = UINavigationController(rootViewController: mainViewController)
         
