@@ -23,7 +23,7 @@ class ReflectionsDatePickerViewController: UIViewController {
     // MARK: - View Configuration
     
     private func configureView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
     }
     
     private func configureDatePickerStack() {
@@ -40,8 +40,6 @@ class ReflectionsDatePickerViewController: UIViewController {
         ])
     }
     
-    // MARK: - Year Picker Configuration
-    
     private func configureYearPicker() {
         guard let viewModel = viewModel else { return }
         
@@ -51,18 +49,18 @@ class ReflectionsDatePickerViewController: UIViewController {
         
         yearLabel.text = yearString
         yearLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
-        yearLabel.textColor = .black
+        yearLabel.textColor = .label
         yearLabel.textAlignment = .center
         yearLabel.translatesAutoresizingMaskIntoConstraints = false
         
         leftArrowButton.setImage(UIImage(systemName: "arrowtriangle.left.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 22, weight: .regular)), for: .normal)
-        leftArrowButton.tintColor = .black
+        leftArrowButton.tintColor = UIColor(named: "BTint100")
         leftArrowButton.translatesAutoresizingMaskIntoConstraints = false
         leftArrowButton.addTarget(self, action: #selector(previousYear), for: .touchUpInside)
         
         
         rightArrowButton.setImage(UIImage(systemName: "arrowtriangle.right.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 22, weight: .regular)), for: .normal)
-        rightArrowButton.tintColor = .black
+        rightArrowButton.tintColor = UIColor(named: "BTint100")
         rightArrowButton.translatesAutoresizingMaskIntoConstraints = false
         rightArrowButton.addTarget(self, action: #selector(nextYear), for: .touchUpInside)
         
@@ -73,8 +71,6 @@ class ReflectionsDatePickerViewController: UIViewController {
         yearPickerStack.addArrangedSubview(yearPickerStackView)
         datePickerStack.addArrangedSubview(yearPickerStack)
     }
-    
-    // MARK: - Month Picker Configuration
     
     private func configureMonthPicker() {
         let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -108,31 +104,35 @@ class ReflectionsDatePickerViewController: UIViewController {
         dateFormatter.dateFormat = "MMM"
         let currentMonth = dateFormatter.string(from: viewModel.date)
         
-        if month == currentMonth {
-            labelView.backgroundColor = .systemBlue
-        } else {
-            labelView.backgroundColor = .clear
-        }
+        labelView.backgroundColor = .clear
+
+//        if month == currentMonth {
+//            labelView.backgroundColor = UIColor(named: "Bluemarine")
+//        } else {
+//            labelView.backgroundColor = .clear
+//        }
         
         labelView.layer.cornerRadius = 4
         
         let label = UILabel()
         label.text = month
         
-        if month == currentMonth {
-            label.textColor = .white
-            label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        } else {
-            label.textColor = .black
-            label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        }
+//        if month == currentMonth {
+//            label.textColor = .white
+//            label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+//        } else {
+//            label.textColor = .label
+//            label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+//        }
+    
+    label.textColor = .label
+    label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         
         labelView.addSubview(label)
         
-        // Add tap gesture recognizer to the label view
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(monthTapped(_:)))
         labelView.addGestureRecognizer(tapGesture)
         
@@ -145,8 +145,6 @@ class ReflectionsDatePickerViewController: UIViewController {
         
         return labelView
     }
-    
-    
     
     // MARK: - Actions
     
@@ -208,8 +206,8 @@ class ReflectionsDatePickerViewController: UIViewController {
                 for monthView in stackView.arrangedSubviews {
                     if let label = monthView.subviews.first(where: { $0 is UILabel }) as? UILabel {
                         let isSelected = label.text == currentMonth
-                        monthView.backgroundColor = isSelected ? .systemBlue : .clear
-                        label.textColor = isSelected ? .white : .black
+                        monthView.backgroundColor = isSelected ? UIColor(named: "Bluemarine") : .clear
+                        label.textColor = isSelected ? .white : .label
                         label.font = isSelected ? UIFont.systemFont(ofSize: 17, weight: .semibold) : UIFont.systemFont(ofSize: 17, weight: .regular)
                     }
                 }
