@@ -13,17 +13,15 @@ class ReflectionsViewModel {
     
     init() {
         container = try? ModelContainer(for: Reflection.self, Skill.self)
-        //        generateData()
-        loadData()
     }
     
     func loadData() {
         let reflectionDescriptor = FetchDescriptor<Reflection>(
             sortBy: [SortDescriptor(\Reflection.createdAt, order: .forward)]
         )
-        let SkillDescriptor = FetchDescriptor<Skill>()
+        let skillDescriptor = FetchDescriptor<Skill>()
         reflections = (try? container?.mainContext.fetch(reflectionDescriptor)) ?? []
-        skills = (try? container?.mainContext.fetch(SkillDescriptor)) ?? []
+        skills = (try? container?.mainContext.fetch(skillDescriptor)) ?? []
     }
     
     func generateData() {
@@ -43,6 +41,14 @@ class ReflectionsViewModel {
             reflection4 = Reflection(topic: "topic 4", answers: ["ans1", "ans2"], createdAt: specificDate)
         }
         
+        container?.mainContext.insert(reflection1)
+        container?.mainContext.insert(reflection2)
+        container?.mainContext.insert(reflection3)
+        
+        if let reflection4 = reflection4 {
+            container?.mainContext.insert(reflection4)
+        }
+        
         let skill1 = Skill(name: "softskill 1", role: "tech", type: "softskill", reflection: reflection1)
         let skill2 = Skill(name: "hardskill 1", role: "tech", type: "hardskill", reflection: reflection1)
         
@@ -52,14 +58,7 @@ class ReflectionsViewModel {
         let skill5 = Skill(name: "softskill 3", role: "tech", type: "softskill", reflection: reflection3)
         let skill6 = Skill(name: "hardskill 3", role: "tech", type: "hardskill", reflection: reflection3)
         
-        container?.mainContext.insert(reflection1)
-        container?.mainContext.insert(reflection2)
-        container?.mainContext.insert(reflection3)
-        
-        // Safely unwrap reflection4 before inserting
-        if let reflection4 = reflection4 {
-            container?.mainContext.insert(reflection4)
-        }
+        let skill7 = Skill(name: "hardskill 4", role: "tech", type: "hardskill", reflection: reflection4)
         
         container?.mainContext.insert(skill1)
         container?.mainContext.insert(skill2)
@@ -67,8 +66,7 @@ class ReflectionsViewModel {
         container?.mainContext.insert(skill4)
         container?.mainContext.insert(skill5)
         container?.mainContext.insert(skill6)
-        
-        loadData()
+        container?.mainContext.insert(skill7)
     }
     
     func getCurrentDateFormatted() -> String {

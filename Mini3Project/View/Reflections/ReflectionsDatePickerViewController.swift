@@ -182,7 +182,6 @@ class ReflectionsDatePickerViewController: UIViewController {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year], from: viewModel.date)
         
-        // Create new date with selected month and current year
         let newDateString = "\(monthText) \(components.year!)"
         dateFormatter.dateFormat = "MMM yyyy"
         if let newDate = dateFormatter.date(from: newDateString) {
