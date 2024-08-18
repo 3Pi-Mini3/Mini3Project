@@ -17,57 +17,48 @@ class CustomTabBarController: UITabBarController {
     override func viewDidLoad() {
             super.viewDidLoad()
 
-            // Set up the tab bar appearance with a deeper curve and transparency
             setupTabBar()
 
-            // Set up the view controllers for the tabs
             let firstVC = MainViewController()
             let secondVC = ChatViewController()
 
-            // Create SF Symbols for tab bar icons
-            let firstVCIcon = UIImage(systemName: "target")?.withRenderingMode(.alwaysOriginal) // Example SF Symbol
-            let secondVCIcon = UIImage(systemName: "book.pages.fill")?.withRenderingMode(.alwaysOriginal) // Example SF Symbol
+            let firstVCIcon = UIImage(systemName: "target")?.withRenderingMode(.alwaysOriginal)
+            let secondVCIcon = UIImage(systemName: "book.pages.fill")?.withRenderingMode(.alwaysOriginal)
 
-            // Customize the tab bar items
             firstVC.tabBarItem = UITabBarItem(title: "Skills", image: firstVCIcon, tag: 0)
             secondVC.tabBarItem = UITabBarItem(title: "Reflection", image: secondVCIcon, tag: 1)
 
             viewControllers = [firstVC, secondVC]
 
-            // Set up the middle button
             setupMiddleButton()
         }
 
 
     func setupTabBar() {
-        // Create a custom tab bar curve with transparency
-        shapeLayer.path = createCurvePath() // Set the path for the tab bar's curve
-        shapeLayer.fillColor = UIColor.white.cgColor // Set the curve color to white
-        shapeLayer.backgroundColor = UIColor.clear.cgColor // Transparent center section
+        shapeLayer.path = createCurvePath()
+        shapeLayer.fillColor = UIColor.white.cgColor
+        shapeLayer.backgroundColor = UIColor.clear.cgColor
         shapeLayer.shadowColor = UIColor.black.cgColor
         shapeLayer.shadowOffset = CGSize(width: 0, height: 4)
         shapeLayer.shadowOpacity = 0.2
         shapeLayer.shadowRadius = 5
 
-        // Add the shape layer to the tab bar
         tabBar.layer.insertSublayer(shapeLayer, at: 0)
 
-        // Create and add the tab bar border layer
         let tabBarBorderPath = UIBezierPath(rect: CGRect(x: 0, y: tabBar.bounds.height - 2, width: tabBar.bounds.width, height: 2))
         tabBarBorderLayer.path = tabBarBorderPath.cgPath
         tabBarBorderLayer.lineWidth = 5
         tabBarBorderLayer.fillColor = UIColor.clear.cgColor
         tabBar.layer.addSublayer(tabBarBorderLayer)
 
-        // Ensure the tab bar isn't translucent
         tabBar.isTranslucent = false
-        tabBar.backgroundColor = UIColor.white // Set tab bar background to white
+        tabBar.backgroundColor = UIColor.white
         tabBar.tintColor = UIColor(named: "BTint100")
         tabBar.unselectedItemTintColor = .gray
     }
 
     func createCurvePath() -> CGPath {
-        let height: CGFloat = 110 // Adjust the depth of the curve to make it deeper
+        let height: CGFloat = 110
 
         let path = UIBezierPath()
         let width = tabBar.bounds.width
@@ -92,40 +83,33 @@ class CustomTabBarController: UITabBarController {
     }
 
     func setupMiddleButton() {
-        // Create a circular button with width and height of 80
         middleButton.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
-        middleButton.layer.cornerRadius = 40 // Half of the width/height to make it circular
+        middleButton.layer.cornerRadius = 40
         middleButton.backgroundColor = UIColor(named: "Bluemarine")
         
-        // Set a custom image or scale the existing image
-        let plusImage = UIImage(systemName: "plus")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 30, weight: .black))
+        let plusImage = UIImage(systemName: "plus")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))
         middleButton.setImage(plusImage, for: .normal)
-        middleButton.tintColor = UIColor(named: "Caution")
+        middleButton.tintColor = UIColor(named: "YellowButton")
 
-        // Add the middle button to the view
         view.addSubview(middleButton)
 
-        // Create and add the middle button border layer with padding
         let middleButtonBorderPath = UIBezierPath(ovalIn: middleButton.bounds.insetBy(dx: -2, dy: -2))
         middleButtonBorderLayer.path = middleButtonBorderPath.cgPath
-        middleButtonBorderLayer.strokeColor = UIColor.white.cgColor // White border color
-        middleButtonBorderLayer.lineWidth = 4 // Width of the border
+        middleButtonBorderLayer.strokeColor = UIColor.white.cgColor
+        middleButtonBorderLayer.lineWidth = 4
         middleButtonBorderLayer.fillColor = UIColor.clear.cgColor
         middleButton.layer.addSublayer(middleButtonBorderLayer)
 
-        // Position the button to "hang" over the curve
         var buttonFrame = middleButton.frame
         buttonFrame.origin.y = view.bounds.height - buttonFrame.height - tabBar.bounds.height + 10
         buttonFrame.origin.x = view.bounds.width / 2 - buttonFrame.size.width / 2
         middleButton.frame = buttonFrame
 
-        // Add action for button tap
         middleButton.addTarget(self, action: #selector(middleButtonTapped), for: .touchUpInside)
     }
 
 
     @objc func middleButtonTapped() {
-        // Handle the middle button tap
         let alert = UIAlertController(title: "Middle Button", message: "Middle button tapped!", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
@@ -133,8 +117,8 @@ class CustomTabBarController: UITabBarController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        shapeLayer.path = createCurvePath() // Update the curve path when the layout changes
-        tabBarBorderLayer.frame = tabBar.bounds // Update the tab bar border layer frame
-        middleButtonBorderLayer.frame = middleButton.bounds // Update the middle button border layer frame
+        shapeLayer.path = createCurvePath()
+        tabBarBorderLayer.frame = tabBar.bounds
+        middleButtonBorderLayer.frame = middleButton.bounds
     }
 }
