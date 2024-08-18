@@ -1,19 +1,15 @@
-//
-//  ReflectionDetailViewController.swift
-//  Mini3Project
-//
-//  Created by Christopher Nathanael Tessy on 15/08/24.
-//
-
 import UIKit
 
 class ReflectionDetailViewController: UIViewController {
+    var reflection: Reflection?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Set up the view
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
+        title = reflection?.topic
+        navigationController?.navigationBar.prefersLargeTitles = true
 
         // Add a label
         let label = UILabel()

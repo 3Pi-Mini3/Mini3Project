@@ -20,7 +20,7 @@ class ReflectionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel.generateData()
+        //        viewModel.generateData()
         viewModel.loadData()
         configureView()
         configureDateLabel()
@@ -31,7 +31,7 @@ class ReflectionsViewController: UIViewController {
     // MARK: - View Configuration
     private func configureView() {
         view.backgroundColor = .systemBackground
-        title = "Reflections"
+        self.parent?.title = "Reflections"
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
@@ -152,7 +152,7 @@ class ReflectionsViewController: UIViewController {
             reflectionDetailStack.spacing = 12
             reflectionDetailStack.translatesAutoresizingMaskIntoConstraints = false
             
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(goToReflectionDetail))
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(goToReflectionDetail(_:)))
             reflectionView.addGestureRecognizer(tapGesture)
             
             reflectionView.addSubview(reflectionDetailStack)
@@ -176,9 +176,17 @@ class ReflectionsViewController: UIViewController {
     
     
     // MARK: - Actions
-    @objc private func goToReflectionDetail() {
+    @objc private func goToReflectionDetail(_ sender: UITapGestureRecognizer) {
+        guard let reflectionView = sender.view else { return }
+        
+        guard let index = reflectionsStack.arrangedSubviews.firstIndex(of: reflectionView) else { return }
+        
+        let reflection = viewModel.filteredReflections[index]
+        
         let detailViewController = ReflectionDetailViewController()
+        detailViewController.reflection = reflection
         detailViewController.title = "Reflection Detail"
+        
         navigationController?.pushViewController(detailViewController, animated: true)
     }
     
