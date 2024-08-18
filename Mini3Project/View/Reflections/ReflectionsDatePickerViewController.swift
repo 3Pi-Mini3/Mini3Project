@@ -47,7 +47,7 @@ class ReflectionsDatePickerViewController: UIViewController {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy"
-        let yearString = dateFormatter.string(from: viewModel.currentDate)
+        let yearString = dateFormatter.string(from: viewModel.date)
         
         yearLabel.text = yearString
         yearLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
@@ -106,7 +106,7 @@ class ReflectionsDatePickerViewController: UIViewController {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM"
-        let currentMonth = dateFormatter.string(from: viewModel.currentDate)
+        let currentMonth = dateFormatter.string(from: viewModel.date)
         
         if month == currentMonth {
             labelView.backgroundColor = .systemBlue
@@ -154,8 +154,8 @@ class ReflectionsDatePickerViewController: UIViewController {
         guard let viewModel = viewModel else { return }
         
         let calendar = Calendar.current
-        if let newDate = calendar.date(byAdding: .year, value: -1, to: viewModel.currentDate) {
-            viewModel.currentDate = newDate
+        if let newDate = calendar.date(byAdding: .year, value: -1, to: viewModel.date) {
+            viewModel.date = newDate
             updateYearLabel()
         }
     }
@@ -164,8 +164,8 @@ class ReflectionsDatePickerViewController: UIViewController {
         guard let viewModel = viewModel else { return }
         
         let calendar = Calendar.current
-        if let newDate = calendar.date(byAdding: .year, value: 1, to: viewModel.currentDate) {
-            viewModel.currentDate = newDate
+        if let newDate = calendar.date(byAdding: .year, value: 1, to: viewModel.date) {
+            viewModel.date = newDate
             updateYearLabel()
         }
     }
@@ -180,13 +180,13 @@ class ReflectionsDatePickerViewController: UIViewController {
         dateFormatter.dateFormat = "MMM"
         
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.year], from: viewModel.currentDate)
+        let components = calendar.dateComponents([.year], from: viewModel.date)
         
         // Create new date with selected month and current year
         let newDateString = "\(monthText) \(components.year!)"
         dateFormatter.dateFormat = "MMM yyyy"
         if let newDate = dateFormatter.date(from: newDateString) {
-            viewModel.currentDate = newDate
+            viewModel.date = newDate
             updateMonthLabels()
         }
     }
@@ -194,7 +194,7 @@ class ReflectionsDatePickerViewController: UIViewController {
     private func updateYearLabel() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy"
-        let yearString = dateFormatter.string(from: viewModel?.currentDate ?? Date())
+        let yearString = dateFormatter.string(from: viewModel?.date ?? Date())
         
         yearLabel.text = yearString
     }
@@ -202,7 +202,7 @@ class ReflectionsDatePickerViewController: UIViewController {
     private func updateMonthLabels() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM"
-        let currentMonth = dateFormatter.string(from: viewModel?.currentDate ?? Date())
+        let currentMonth = dateFormatter.string(from: viewModel?.date ?? Date())
         
         for subview in monthPickerStack.arrangedSubviews {
             if let stackView = subview as? UIStackView {
