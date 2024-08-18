@@ -43,9 +43,7 @@ class ReflectionsDatePickerViewController: UIViewController {
     private func configureYearPicker() {
         guard let viewModel = viewModel else { return }
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy"
-        let yearString = dateFormatter.string(from: viewModel.date)
+        let yearString = viewModel.getCurrentYear()
         
         yearLabel.text = yearString
         yearLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
@@ -96,45 +94,25 @@ class ReflectionsDatePickerViewController: UIViewController {
     }
     
     private func createMonthLabelView(with month: String) -> UIView {
-        let labelView = UIView()
-        
         guard let viewModel = viewModel else { return UIView() }
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM"
-        let currentMonth = dateFormatter.string(from: viewModel.date)
+        let currentMonth = viewModel.getCurrentMonth()
         
+        let labelView = UIView()
         labelView.backgroundColor = .clear
-
-//        if month == currentMonth {
-//            labelView.backgroundColor = UIColor(named: "Bluemarine")
-//        } else {
-//            labelView.backgroundColor = .clear
-//        }
-        
         labelView.layer.cornerRadius = 4
         
         let label = UILabel()
         label.text = month
-        
-//        if month == currentMonth {
-//            label.textColor = .white
-//            label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-//        } else {
-//            label.textColor = .label
-//            label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-//        }
-    
-    label.textColor = .label
-    label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        
+        label.textColor = .label
+        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         
-        labelView.addSubview(label)
-        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(monthTapped(_:)))
         labelView.addGestureRecognizer(tapGesture)
+        
+        labelView.addSubview(label)
         
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: labelView.topAnchor, constant: 12),
@@ -189,17 +167,16 @@ class ReflectionsDatePickerViewController: UIViewController {
     }
     
     private func updateYearLabel() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy"
-        let yearString = dateFormatter.string(from: viewModel?.date ?? Date())
+        guard let viewModel = viewModel else { return }
         
+        let yearString = viewModel.getCurrentYear()
         yearLabel.text = yearString
     }
     
     private func updateMonthLabels() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM"
-        let currentMonth = dateFormatter.string(from: viewModel?.date ?? Date())
+        guard let viewModel = viewModel else { return }
+        
+        let currentMonth = viewModel.getCurrentMonth()
         
         for subview in monthPickerStack.arrangedSubviews {
             if let stackView = subview as? UIStackView {
