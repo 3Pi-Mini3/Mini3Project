@@ -8,6 +8,13 @@ enum Section {
 
 class ReflectionsViewController: UIViewController {
     // MARK: - UI Elements
+    private let headerView: UIView = UIView()
+    private let imageView: UIImageView = UIImageView()
+    
+    private let reflectionsView: UIView = UIView()
+    
+    private let titleLabel: UILabel = UILabel()
+    
     private let dateView: UIView = UIView()
     private let dateLabel: UILabel = UILabel()
     private let reflectionsStack: UIStackView = UIStackView()
@@ -20,50 +27,123 @@ class ReflectionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //        viewModel.generateData()
+        viewModel.generateData()
         viewModel.loadData()
+        
         configureView()
+        configureHeaderView()
+        configureRelfectionsView()
+        configureTitleLabel()
         configureDateLabel()
         configureReflections()
+        
         bindViewModel()
     }
     
     // MARK: - View Configuration
     private func configureView() {
-        view.backgroundColor = .systemBackground
-        self.parent?.title = "Reflections"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        view.backgroundColor = .systemGray6
+    }
+    
+    private func configureHeaderView() {
+        headerView.backgroundColor = .systemBackground
+        
+        imageView.image = UIImage(named: "ReflectionsHeader")
+        imageView.frame = CGRect(x: 0, y: 0, width: 393, height: 200)
+        imageView.layer.cornerRadius = 50
+        imageView.layer.maskedCorners = [.layerMinXMaxYCorner]
+        imageView.layer.masksToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        headerView.addSubview(imageView)
+        
+        view.addSubview(headerView)
+        
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: view.topAnchor),
+            headerView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 200),
+            
+            imageView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+        ])
+    }
+    
+    private func configureRelfectionsView() {
+        reflectionsView.backgroundColor = .systemBackground
+        reflectionsView.layer.cornerRadius = 50
+        reflectionsView.layer.maskedCorners = [.layerMaxXMinYCorner]
+        reflectionsView.layer.masksToBounds = true
+        reflectionsView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(reflectionsView)
+        
+        NSLayoutConstraint.activate([
+            reflectionsView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
+            reflectionsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            reflectionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            reflectionsView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+    }
+    
+    private func configureTitleLabel() {
+        let titleAttributedString = NSAttributedString(
+            string: "Reflections",
+            attributes: TypographyEmphasized.largeTitle
+        )
+        titleLabel.attributedText = titleAttributedString
+        titleLabel.textAlignment = .left
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(titleLabel)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: reflectionsView.topAnchor, constant: 32),
+            titleLabel.leadingAnchor.constraint(equalTo: reflectionsView.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: reflectionsView.trailingAnchor, constant: -16),
+        ])
     }
     
     private func configureDateLabel() {
-        dateView.backgroundColor = UIColor(named: "BTint100")
-        dateView.layer.cornerRadius = 8
+        dateView.backgroundColor = UIColor(named: "Bluemarine")
+        dateView.layer.cornerRadius = 24
         dateView.translatesAutoresizingMaskIntoConstraints = false
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openDatePicker))
         dateView.addGestureRecognizer(tapGesture)
         
         dateLabel.text = viewModel.getCurrentDateFormatted()
-        dateLabel.layer.cornerRadius = 8
-        dateLabel.layer.masksToBounds = true
-        dateLabel.textColor = .white
+        dateLabel.textColor = UIColor(named: "White")
         dateLabel.textAlignment = .center
         dateLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        dateView.addSubview(dateLabel)
+        let iconImageView = UIImageView()
+        iconImageView.image = UIImage(systemName: "calendar")
+        iconImageView.frame = CGRect(x: 0, y: 0, width: 22, height: 22)
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.tintColor = UIColor(named: "White")
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let contentStackView = UIStackView(arrangedSubviews: [iconImageView, dateLabel])
+        contentStackView.axis = .horizontal
+        contentStackView.spacing = 12
+        contentStackView.alignment = .center
+        contentStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        dateView.addSubview(contentStackView)
         view.addSubview(dateView)
         
         NSLayoutConstraint.activate([
-            dateView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            dateView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 32),
             dateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             dateView.widthAnchor.constraint(equalToConstant: 268),
             dateView.heightAnchor.constraint(equalToConstant: 48),
             
-            dateLabel.centerXAnchor.constraint(equalTo: dateView.centerXAnchor),
-            dateLabel.centerYAnchor.constraint(equalTo: dateView.centerYAnchor),
-            dateLabel.leadingAnchor.constraint(equalTo: dateView.leadingAnchor),
-            dateLabel.trailingAnchor.constraint(equalTo: dateView.trailingAnchor),
+            contentStackView.centerXAnchor.constraint(equalTo: dateView.centerXAnchor),
+            contentStackView.centerYAnchor.constraint(equalTo: dateView.centerYAnchor),
         ])
     }
     
@@ -101,36 +181,55 @@ class ReflectionsViewController: UIViewController {
         
         for reflection in viewModel.filteredReflections {
             let reflectionTopicLabel = UILabel()
-            reflectionTopicLabel.text = reflection.topic
-            reflectionTopicLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+            let topicAttributedString = NSAttributedString(
+                string: reflection.topic,
+                attributes: TypographyRegular.headline
+            )
+            reflectionTopicLabel.attributedText = topicAttributedString
             reflectionTopicLabel.translatesAutoresizingMaskIntoConstraints = false
             
             let reflectionHardSkillsLabel = UILabel()
-            reflectionHardSkillsLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+            var hardSkillsString = ""
             if let skills = reflection.skill {
                 let hardSkills = skills
                     .filter { $0.type == "hardskill" }
                     .map { $0.name }
                 
-                let hardSkillsString = hardSkills.isEmpty ? "-" : hardSkills.joined(separator: ", ")
-                reflectionHardSkillsLabel.text = "Hard skills : \(hardSkillsString)"
+                if hardSkills.isEmpty {
+                    hardSkillsString = "Hard skills : -"
+                } else {
+                    hardSkillsString = "Hard skills : \(hardSkills.joined(separator: ", "))"
+                }
             } else {
-                reflectionHardSkillsLabel.text = "Hard skills : -"
+                hardSkillsString = "Hard skills : -"
             }
+            let hardSkillsAttributedString = NSAttributedString(
+                string: hardSkillsString,
+                attributes: TypographyRegular.footnote
+            )
+            reflectionHardSkillsLabel.attributedText = hardSkillsAttributedString
             reflectionHardSkillsLabel.translatesAutoresizingMaskIntoConstraints = false
             
             let reflectionSoftSkillsLabel = UILabel()
-            reflectionSoftSkillsLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+            var softSkillsString = ""
             if let skills = reflection.skill {
                 let softSkills = skills
                     .filter { $0.type == "softskill" }
                     .map { $0.name }
                 
-                let softSkillsString = softSkills.isEmpty ? "-" : softSkills.joined(separator: ", ")
-                reflectionSoftSkillsLabel.text = "Soft skills : \(softSkillsString)"
+                if softSkills.isEmpty {
+                    softSkillsString = "Soft skills : -"
+                } else {
+                    softSkillsString = "Soft skills : \(softSkills.joined(separator: ", "))"
+                }
             } else {
-                reflectionSoftSkillsLabel.text = "Soft skills : -"
+                softSkillsString = "Hard skills : -"
             }
+            let softSkillsAttributedString = NSAttributedString(
+                string: softSkillsString,
+                attributes: TypographyRegular.footnote
+            )
+            reflectionSoftSkillsLabel.attributedText = softSkillsAttributedString
             reflectionSoftSkillsLabel.translatesAutoresizingMaskIntoConstraints = false
             
             let horizontalLineView: UIView = UIView()
@@ -138,18 +237,36 @@ class ReflectionsViewController: UIViewController {
             horizontalLineView.translatesAutoresizingMaskIntoConstraints = false
             
             let reflectionDateLabel = UILabel()
-            reflectionDateLabel.text = viewModel.getReflectionDateFormatted(reflection: reflection)
             reflectionDateLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+            let dateAttributedString = NSAttributedString(
+                string:  viewModel.getReflectionDateFormatted(reflection: reflection),
+                attributes: TypographyRegular.caption1
+            )
+            reflectionDateLabel.attributedText = dateAttributedString
             reflectionDateLabel.translatesAutoresizingMaskIntoConstraints = false
             
             let reflectionView = UIView()
             reflectionView.backgroundColor = .systemGray6
-            reflectionView.layer.cornerRadius = 8
+            reflectionView.layer.cornerRadius = 20
+
+            if let borderColor = UIColor(named: "Bluemarine")?.cgColor {
+                reflectionView.layer.borderColor = borderColor
+            }
+
+            reflectionView.layer.borderWidth = 2
+            
+            if let shadowColor = UIColor(named: "Bluemarine")?.cgColor {
+                reflectionView.layer.shadowColor = shadowColor
+                reflectionView.layer.shadowOpacity = 1.0
+                reflectionView.layer.shadowOffset = CGSize(width: 0, height: 4)
+                reflectionView.layer.shadowRadius = 0
+            }
+            
             reflectionView.translatesAutoresizingMaskIntoConstraints = false
             
             let reflectionDetailStack = UIStackView(arrangedSubviews: [reflectionTopicLabel, reflectionHardSkillsLabel, reflectionSoftSkillsLabel, horizontalLineView, reflectionDateLabel])
             reflectionDetailStack.axis = .vertical
-            reflectionDetailStack.spacing = 12
+            reflectionDetailStack.spacing = 16
             reflectionDetailStack.translatesAutoresizingMaskIntoConstraints = false
             
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(goToReflectionDetail(_:)))
@@ -197,8 +314,8 @@ class ReflectionsViewController: UIViewController {
         datePickerViewController.viewModel = viewModel
         
         if let popover = datePickerViewController.popoverPresentationController {
-            popover.sourceView = dateLabel
-            popover.sourceRect = dateLabel.bounds
+            popover.sourceView = dateView
+            popover.sourceRect = dateView.bounds
             popover.permittedArrowDirections = .up
             popover.delegate = self
         }

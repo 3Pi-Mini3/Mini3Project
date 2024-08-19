@@ -47,7 +47,7 @@ class ReflectionsDatePickerViewController: UIViewController {
         
         yearLabel.text = yearString
         yearLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
-        yearLabel.textColor = .label
+        yearLabel.textColor = UIColor(named: "White")
         yearLabel.textAlignment = .center
         yearLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -55,7 +55,6 @@ class ReflectionsDatePickerViewController: UIViewController {
         leftArrowButton.tintColor = UIColor(named: "BTint100")
         leftArrowButton.translatesAutoresizingMaskIntoConstraints = false
         leftArrowButton.addTarget(self, action: #selector(previousYear), for: .touchUpInside)
-        
         
         rightArrowButton.setImage(UIImage(systemName: "arrowtriangle.right.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 22, weight: .regular)), for: .normal)
         rightArrowButton.tintColor = UIColor(named: "BTint100")
@@ -96,7 +95,7 @@ class ReflectionsDatePickerViewController: UIViewController {
     private func createMonthLabelView(with month: String) -> UIView {
         guard let viewModel = viewModel else { return UIView() }
         
-        let currentMonth = viewModel.getCurrentMonth()
+//        let currentMonth = viewModel.getCurrentMonth()
         
         let labelView = UIView()
         labelView.backgroundColor = .clear
@@ -104,7 +103,7 @@ class ReflectionsDatePickerViewController: UIViewController {
         
         let label = UILabel()
         label.text = month
-        label.textColor = .label
+        label.textColor = UIColor(named: "White")
         label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -184,7 +183,7 @@ class ReflectionsDatePickerViewController: UIViewController {
                     if let label = monthView.subviews.first(where: { $0 is UILabel }) as? UILabel {
                         let isSelected = label.text == currentMonth
                         monthView.backgroundColor = isSelected ? UIColor(named: "Bluemarine") : .clear
-                        label.textColor = isSelected ? .white : .label
+                        label.textColor = isSelected ? .white : UIColor(named: "White")
                         label.font = isSelected ? UIFont.systemFont(ofSize: 17, weight: .semibold) : UIFont.systemFont(ofSize: 17, weight: .regular)
                     }
                 }

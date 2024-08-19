@@ -6,10 +6,7 @@ class ReflectionDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Set up the view
-        view.backgroundColor = .systemBackground
-        title = reflection?.topic
-        navigationController?.navigationBar.prefersLargeTitles = true
+        configureView()
 
         // Add a label
         let label = UILabel()
@@ -24,5 +21,14 @@ class ReflectionDetailViewController: UIViewController {
             label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
+    
+    func configureView() {
+        view.backgroundColor = .systemBackground
+        title = reflection?.topic
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
 
+    func configureQuestionView() {
+        
+    }
 }
