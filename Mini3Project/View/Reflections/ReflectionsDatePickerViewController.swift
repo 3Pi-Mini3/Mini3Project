@@ -46,8 +46,12 @@ class ReflectionsDatePickerViewController: UIViewController {
         let yearString = viewModel.getCurrentYear()
         
         yearLabel.text = yearString
-        yearLabel.font = UIFont.systemFont(ofSize: 22, weight: .bold)
-        yearLabel.textColor = UIColor(named: "White")
+        let yearAttributedString = NSAttributedString(
+            string: yearString,
+            attributes: TypographyRegular.headline
+        )
+        yearLabel.attributedText = yearAttributedString
+        yearLabel.textColor = UIColor(named: "Black")
         yearLabel.textAlignment = .center
         yearLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -93,18 +97,18 @@ class ReflectionsDatePickerViewController: UIViewController {
     }
     
     private func createMonthLabelView(with month: String) -> UIView {
-        guard let viewModel = viewModel else { return UIView() }
-        
-//        let currentMonth = viewModel.getCurrentMonth()
-        
         let labelView = UIView()
         labelView.backgroundColor = .clear
         labelView.layer.cornerRadius = 4
         
         let label = UILabel()
         label.text = month
-        label.textColor = UIColor(named: "White")
-        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        label.textColor = UIColor(named: "Black")
+        let labelAttributedString = NSAttributedString(
+            string: month,
+            attributes: TypographyRegular.body
+        )
+        label.attributedText = labelAttributedString
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -183,7 +187,7 @@ class ReflectionsDatePickerViewController: UIViewController {
                     if let label = monthView.subviews.first(where: { $0 is UILabel }) as? UILabel {
                         let isSelected = label.text == currentMonth
                         monthView.backgroundColor = isSelected ? UIColor(named: "Bluemarine") : .clear
-                        label.textColor = isSelected ? .white : UIColor(named: "White")
+                        label.textColor = isSelected ? .white : UIColor(named: "Black")
                         label.font = isSelected ? UIFont.systemFont(ofSize: 17, weight: .semibold) : UIFont.systemFont(ofSize: 17, weight: .regular)
                     }
                 }

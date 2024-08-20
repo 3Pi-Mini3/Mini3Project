@@ -94,7 +94,6 @@ class ReflectionsViewController: UIViewController {
             attributes: TypographyEmphasized.largeTitle
         )
         titleLabel.attributedText = titleAttributedString
-        titleLabel.textAlignment = .left
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(titleLabel)
@@ -114,15 +113,17 @@ class ReflectionsViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openDatePicker))
         dateView.addGestureRecognizer(tapGesture)
         
-        dateLabel.text = viewModel.getCurrentDateFormatted()
+        let dateAttributedString = NSAttributedString(
+            string:  viewModel.getCurrentDateFormatted(),
+            attributes: TypographyRegular.headline
+        )
+        dateLabel.attributedText = dateAttributedString
         dateLabel.textColor = UIColor(named: "White")
         dateLabel.textAlignment = .center
-        dateLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let iconImageView = UIImageView()
         iconImageView.image = UIImage(systemName: "calendar")
-        iconImageView.frame = CGRect(x: 0, y: 0, width: 22, height: 22)
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.tintColor = UIColor(named: "White")
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -137,6 +138,9 @@ class ReflectionsViewController: UIViewController {
         view.addSubview(dateView)
         
         NSLayoutConstraint.activate([
+            iconImageView.widthAnchor.constraint(equalToConstant: 22),
+            iconImageView.heightAnchor.constraint(equalToConstant: 22),
+            
             dateView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 32),
             dateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             dateView.widthAnchor.constraint(equalToConstant: 268),
@@ -237,7 +241,6 @@ class ReflectionsViewController: UIViewController {
             horizontalLineView.translatesAutoresizingMaskIntoConstraints = false
             
             let reflectionDateLabel = UILabel()
-            reflectionDateLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
             let dateAttributedString = NSAttributedString(
                 string:  viewModel.getReflectionDateFormatted(reflection: reflection),
                 attributes: TypographyRegular.caption1

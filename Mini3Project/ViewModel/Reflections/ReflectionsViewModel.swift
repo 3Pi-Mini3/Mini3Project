@@ -52,8 +52,8 @@ class ReflectionsViewModel {
         let skill1 = Skill(name: "softskill 1", role: "tech", type: "softskill", reflection: reflection1)
         let skill2 = Skill(name: "hardskill 1", role: "tech", type: "hardskill", reflection: reflection1)
         
-        let skill3 = Skill(name: "softskill 2", role: "tech", type: "softskill", reflection: reflection2)
-        let skill4 = Skill(name: "hardskill 2", role: "tech", type: "hardskill", reflection: reflection2)
+        let skill3 = Skill(name: "softskill 2", role: "tech", type: "softskill", reflection: reflection1)
+        let skill4 = Skill(name: "hardskill 2", role: "tech", type: "hardskill", reflection: reflection1)
         
         let skill5 = Skill(name: "softskill 3", role: "tech", type: "softskill", reflection: reflection3)
         let skill6 = Skill(name: "hardskill 3", role: "tech", type: "hardskill", reflection: reflection3)
