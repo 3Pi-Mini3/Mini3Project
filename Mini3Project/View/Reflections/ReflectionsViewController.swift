@@ -27,25 +27,25 @@ class ReflectionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel.generateData()
+//        viewModel.generateData()
         viewModel.loadData()
         
-        configureView()
-        configureHeaderView()
-        configureRelfectionsView()
-        configureTitleLabel()
-        configureDateLabel()
-        configureReflections()
+        setupView()
+        setupHeaderView()
+        setupRelfectionsView()
+        setupTitleLabel()
+        setupDateLabel()
+        setupReflections()
         
         bindViewModel()
     }
     
     // MARK: - View Configuration
-    private func configureView() {
+    private func setupView() {
         view.backgroundColor = .systemGray6
     }
     
-    private func configureHeaderView() {
+    private func setupHeaderView() {
         headerView.backgroundColor = .systemBackground
         
         imageView.image = UIImage(named: "ReflectionsHeader")
@@ -71,7 +71,7 @@ class ReflectionsViewController: UIViewController {
         ])
     }
     
-    private func configureRelfectionsView() {
+    private func setupRelfectionsView() {
         reflectionsView.backgroundColor = .systemBackground
         reflectionsView.layer.cornerRadius = 50
         reflectionsView.layer.maskedCorners = [.layerMaxXMinYCorner]
@@ -88,7 +88,7 @@ class ReflectionsViewController: UIViewController {
         ])
     }
     
-    private func configureTitleLabel() {
+    private func setupTitleLabel() {
         let titleAttributedString = NSAttributedString(
             string: "Reflections",
             attributes: TypographyEmphasized.largeTitle
@@ -105,8 +105,8 @@ class ReflectionsViewController: UIViewController {
         ])
     }
     
-    private func configureDateLabel() {
-        dateView.backgroundColor = UIColor(named: "Bluemarine")
+    private func setupDateLabel() {
+        dateView.backgroundColor = UIColor(named: "BTint100")
         dateView.layer.cornerRadius = 24
         dateView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -151,7 +151,7 @@ class ReflectionsViewController: UIViewController {
         ])
     }
     
-    private func configureReflections() {
+    private func setupReflections() {
         reflectionsScrollView.showsVerticalScrollIndicator = false
         reflectionsScrollView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -252,13 +252,13 @@ class ReflectionsViewController: UIViewController {
             reflectionView.backgroundColor = .systemGray6
             reflectionView.layer.cornerRadius = 20
 
-            if let borderColor = UIColor(named: "Bluemarine")?.cgColor {
+            if let borderColor = UIColor(named: "BTint100")?.cgColor {
                 reflectionView.layer.borderColor = borderColor
             }
 
             reflectionView.layer.borderWidth = 2
             
-            if let shadowColor = UIColor(named: "Bluemarine")?.cgColor {
+            if let shadowColor = UIColor(named: "BTint100")?.cgColor {
                 reflectionView.layer.shadowColor = shadowColor
                 reflectionView.layer.shadowOpacity = 1.0
                 reflectionView.layer.shadowOffset = CGSize(width: 0, height: 4)
