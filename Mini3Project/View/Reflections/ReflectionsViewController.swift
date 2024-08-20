@@ -42,7 +42,7 @@ class ReflectionsViewController: UIViewController {
     
     // MARK: - View Configuration
     private func setupView() {
-        view.backgroundColor = .systemGray6
+        view.backgroundColor = UIColor(named: "HeaderBG")
     }
     
     private func setupHeaderView() {
@@ -118,14 +118,14 @@ class ReflectionsViewController: UIViewController {
             attributes: TypographyRegular.headline
         )
         dateLabel.attributedText = dateAttributedString
-        dateLabel.textColor = UIColor(named: "Text")
+        dateLabel.textColor = UIColor(named: "MascotWhite")
         dateLabel.textAlignment = .center
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let iconImageView = UIImageView()
         iconImageView.image = UIImage(systemName: "calendar")
         iconImageView.contentMode = .scaleAspectFit
-        iconImageView.tintColor = UIColor(named: "Text")
+        iconImageView.tintColor = UIColor(named: "MascotWhite")
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         
         let contentStackView = UIStackView(arrangedSubviews: [iconImageView, dateLabel])
@@ -249,7 +249,7 @@ class ReflectionsViewController: UIViewController {
             reflectionDateLabel.translatesAutoresizingMaskIntoConstraints = false
             
             let reflectionView = UIView()
-            reflectionView.backgroundColor = .systemGray6
+            reflectionView.backgroundColor = UIColor(named: "FilledCardPurp")
             reflectionView.layer.cornerRadius = 20
 
             if let borderColor = UIColor(named: "BTint100")?.cgColor {
