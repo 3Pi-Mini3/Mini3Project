@@ -3,6 +3,9 @@ import UIKit
 class ReflectionDetailViewController: UIViewController {
     var reflection: Reflection?
     
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+    
     private let softSkillsContainer: UIStackView = UIStackView()
     private let softSkillsTitleLabel: UILabel = UILabel()
     private let softSkillsList: UIStackView = UIStackView()
@@ -20,6 +23,7 @@ class ReflectionDetailViewController: UIViewController {
         super.viewDidLoad()
         
         setupView()
+        setupScrollView()
         setupSoftSkillsSection()
         setupHardSkillsSection()
         setupSummarySection()
@@ -29,6 +33,28 @@ class ReflectionDetailViewController: UIViewController {
         view.backgroundColor = .systemBackground
         title = "Skills Achieved"
         navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        scrollView.addSubview(contentView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.heightAnchor.constraint(equalToConstant: 1000) // Set a large enough value or dynamically calculate based on content
+        ])
     }
     
     private func setupSoftSkillsSection() {
@@ -59,12 +85,12 @@ class ReflectionDetailViewController: UIViewController {
         
         softSkillsContainer.addArrangedSubview(softSkillsTitleLabel)
         softSkillsContainer.addArrangedSubview(softSkillsList)
-        view.addSubview(softSkillsContainer)
+        contentView.addSubview(softSkillsContainer)
         
         NSLayoutConstraint.activate([
-            softSkillsContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
-            softSkillsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            softSkillsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            softSkillsContainer.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            softSkillsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            softSkillsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
     }
     
@@ -96,12 +122,12 @@ class ReflectionDetailViewController: UIViewController {
         
         hardSkillsContainer.addArrangedSubview(hardSkillsTitleLabel)
         hardSkillsContainer.addArrangedSubview(hardSkillsList)
-        view.addSubview(hardSkillsContainer)
+        contentView.addSubview(hardSkillsContainer)
         
         NSLayoutConstraint.activate([
             hardSkillsContainer.topAnchor.constraint(equalTo: softSkillsContainer.bottomAnchor, constant: 24),
-            hardSkillsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            hardSkillsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            hardSkillsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            hardSkillsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
     }
     
@@ -123,7 +149,7 @@ class ReflectionDetailViewController: UIViewController {
         summaryBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         
         summaryTextLabel.attributedText = NSAttributedString(
-            string: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis?",
+            string: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis?Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis?",
             attributes: TypographyRegular.body
         )
         summaryTextLabel.numberOfLines = 0
@@ -132,12 +158,12 @@ class ReflectionDetailViewController: UIViewController {
         summaryBackgroundView.addSubview(summaryTextLabel)
         summaryContainer.addArrangedSubview(summaryTitleLabel)
         summaryContainer.addArrangedSubview(summaryBackgroundView)
-        view.addSubview(summaryContainer)
+        contentView.addSubview(summaryContainer)
         
         NSLayoutConstraint.activate([
             summaryContainer.topAnchor.constraint(equalTo: hardSkillsContainer.bottomAnchor, constant: 24),
-            summaryContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            summaryContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            summaryContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            summaryContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
             summaryBackgroundView.widthAnchor.constraint(equalTo: summaryContainer.widthAnchor),
             
