@@ -118,14 +118,14 @@ class ReflectionsViewController: UIViewController {
             attributes: TypographyRegular.headline
         )
         dateLabel.attributedText = dateAttributedString
-        dateLabel.textColor = .white
+        dateLabel.textColor = UIColor(named: "Text")
         dateLabel.textAlignment = .center
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let iconImageView = UIImageView()
         iconImageView.image = UIImage(systemName: "calendar")
         iconImageView.contentMode = .scaleAspectFit
-        iconImageView.tintColor = .white
+        iconImageView.tintColor = UIColor(named: "Text")
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         
         let contentStackView = UIStackView(arrangedSubviews: [iconImageView, dateLabel])
