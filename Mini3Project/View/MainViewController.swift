@@ -12,31 +12,22 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Set up the view
         view.backgroundColor = .white
 
+        // Add a label
         let label = UILabel()
         label.text = "Hello, UIKit!"
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
 
-        let navigateButton = UIButton(type: .system)
-        navigateButton.setTitle("Go to Chat", for: .normal)
-        navigateButton.translatesAutoresizingMaskIntoConstraints = false
-        navigateButton.addTarget(self, action: #selector(navigateToChat), for: .touchUpInside)
-        view.addSubview(navigateButton)
-
+        // Center the label
         NSLayoutConstraint.activate([
             label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            navigateButton.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 20),
-            navigateButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
-    
-    @objc func navigateToChat() {
-        let chatVC = ChatViewController()
-        navigationController?.pushViewController(chatVC, animated: true)
-    }
+
 }
+
