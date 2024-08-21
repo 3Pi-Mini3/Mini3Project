@@ -12,7 +12,6 @@ class SkillsContentViewController: UIViewController {
     private let hStackSpacing: CGFloat = 16
     private let cardHeight: CGFloat = 60
     
-    // Scroll View
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -93,12 +92,12 @@ class SkillsContentViewController: UIViewController {
     }
     
     private func addContentStack(to stack: UIStackView, title1: String, title2: String, skills1: [String], skills2: [String]) {
-        addHStack(to: stack, title: title1, skills: skills1)
+        addHStack(to: stack, title: title1, skills: skills1, tag: 1)
         addSpacing(to: stack, height: 16)
-        addHStack(to: stack, title: title2, skills: skills2)
+        addHStack(to: stack, title: title2, skills: skills2, tag: 2)
     }
     
-    private func addHStack(to stack: UIStackView, title: String, skills: [String]) {
+    private func addHStack(to stack: UIStackView, title: String, skills: [String], tag: Int) {
         let hStack = UIStackView()
         hStack.axis = .vertical
         hStack.distribution = .equalSpacing
@@ -124,7 +123,7 @@ class SkillsContentViewController: UIViewController {
 
         // Add target action for the Show More button
         showMoreButton.addTarget(self, action: #selector(showMoreButtonTapped(_:)), for: .touchUpInside)
-        showMoreButton.tag = title.hashValue  // Use the title's hash as a tag to identify which button was clicked
+        showMoreButton.tag = tag  // Tag used to differentiate between soft skills and hard skills
 
         headerStack.addArrangedSubview(titleLabel)
         headerStack.addArrangedSubview(showMoreButton)
@@ -132,20 +131,51 @@ class SkillsContentViewController: UIViewController {
         hStack.addArrangedSubview(headerStack)
 
         for skill in skills {
-            let card = createSkillView(skillName: skill, borderColorName: "BTint200")
-            card.translatesAutoresizingMaskIntoConstraints = false
-            hStack.addArrangedSubview(card)
+            let skillView = createSkillView(skillName: skill, borderColorName: "BTint200")
+            hStack.addArrangedSubview(skillView)
         }
 
         stack.addArrangedSubview(hStack)
     }
-
     
     private func addSpacing(to stack: UIStackView, height: CGFloat) {
-        let spacer = UIView()
-        spacer.translatesAutoresizingMaskIntoConstraints = false
-        stack.addArrangedSubview(spacer)
-        spacer.heightAnchor.constraint(equalToConstant: height).isActive = true
+        let spacingView = UIView()
+        spacingView.translatesAutoresizingMaskIntoConstraints = false
+        spacingView.heightAnchor.constraint(equalToConstant: height).isActive = true
+        stack.addArrangedSubview(spacingView)
+    }
+    
+    @objc private func showMoreButtonTapped(_ sender: UIButton) {
+        let skillCategory: String
+        
+        switch sender.tag {
+        case 1:
+            skillCategory = "Soft"
+        case 2:
+            skillCategory = "Hard"
+        default:
+            return
+        }
+        
+        let detailSkillVC = DetailSkillViewController()
+        detailSkillVC.skillCategory = skillCategory
+        
+        // Pass the appropriate skill array based on the category
+        if skillCategory == "soft" {
+            detailSkillVC.skills = [
+                Skill(name: "Communication", role: "coder", type: "soft"),
+                Skill(name: "Critical Thinking", role: "coder", type: "soft"),
+                Skill(name: "Public Speaking", role: "coder", type: "soft")
+            ]
+        } else if skillCategory == "hard" {
+            detailSkillVC.skills = [
+                Skill(name: "SwiftUI", role: "coder", type: "hard"),
+                Skill(name: "UIKit", role: "coder", type: "hard"),
+                Skill(name: "MVVM", role: "coder", type: "hard")
+            ]
+        }
+        
+        navigationController?.pushViewController(detailSkillVC, animated: true)
     }
     
     private func createSkillView(skillName: String, borderColorName: String) -> UIView {
@@ -159,10 +189,8 @@ class SkillsContentViewController: UIViewController {
         skillView.translatesAutoresizingMaskIntoConstraints = false
         
         let skillLabel = UILabel()
-        skillLabel.attributedText = NSAttributedString(
-            string: skillName,
-            attributes: TypographyRegular.body
-        )
+        skillLabel.text = skillName
+        skillLabel.font = UIFont.systemFont(ofSize: 16)
         skillLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let iconImageView = UIImageView()
@@ -187,30 +215,5 @@ class SkillsContentViewController: UIViewController {
         ])
         
         return skillView
-    }
-    
-    @objc private func showMoreButtonTapped(_ sender: UIButton) {
-        let detailVC = DetailSkillViewController()
-        
-        // Use the button's tag to identify which category was clicked
-        if let title = sender.title(for: .normal) {
-            detailVC.skillCategory = title
-        }
-        
-        // Pass additional data if needed, e.g., skills by month
-        detailVC.skills = getSkills(forCategory: detailVC.skillCategory)
-        
-        // Navigate to the detail view controller
-        navigationController?.pushViewController(detailVC, animated: true)
-    }
-
-    private func getSkills(forCategory category: String?) -> [String] {
-        // Fetch or generate skills based on the category and month
-        // This is just a placeholder; you should implement the actual logic
-        let skillsByMonth: [String: [String]] = [
-            "Soft Skills": ["Communication", "Critical Thinking", "Public Speaking"],
-            "Hard Skills": ["SwiftUI", "UIKit", "MVVM"]
-        ]
-        return skillsByMonth[category ?? ""] ?? []
     }
 }
