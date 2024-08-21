@@ -186,7 +186,7 @@ class ReflectionsDatePickerViewController: UIViewController {
                 for monthView in stackView.arrangedSubviews {
                     if let label = monthView.subviews.first(where: { $0 is UILabel }) as? UILabel {
                         let isSelected = label.text == currentMonth
-                        monthView.backgroundColor = isSelected ? UIColor(named: "Bluemarine") : .clear
+                        monthView.backgroundColor = isSelected ? UIColor(named: "BTint100") : .clear
                         label.textColor = isSelected ? .white : UIColor(named: "Black")
                         label.font = isSelected ? UIFont.systemFont(ofSize: 17, weight: .semibold) : UIFont.systemFont(ofSize: 17, weight: .regular)
                     }

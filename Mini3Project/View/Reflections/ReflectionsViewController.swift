@@ -27,25 +27,25 @@ class ReflectionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel.generateData()
+//        viewModel.generateData()
         viewModel.loadData()
         
-        configureView()
-        configureHeaderView()
-        configureRelfectionsView()
-        configureTitleLabel()
-        configureDateLabel()
-        configureReflections()
+        setupView()
+        setupHeaderView()
+        setupRelfectionsView()
+        setupTitleLabel()
+        setupDateLabel()
+        setupReflections()
         
         bindViewModel()
     }
     
     // MARK: - View Configuration
-    private func configureView() {
-        view.backgroundColor = .systemGray6
+    private func setupView() {
+        view.backgroundColor = UIColor(named: "HeaderBG")
     }
     
-    private func configureHeaderView() {
+    private func setupHeaderView() {
         headerView.backgroundColor = .systemBackground
         
         imageView.image = UIImage(named: "ReflectionsHeader")
@@ -71,7 +71,7 @@ class ReflectionsViewController: UIViewController {
         ])
     }
     
-    private func configureRelfectionsView() {
+    private func setupRelfectionsView() {
         reflectionsView.backgroundColor = .systemBackground
         reflectionsView.layer.cornerRadius = 50
         reflectionsView.layer.maskedCorners = [.layerMaxXMinYCorner]
@@ -88,7 +88,7 @@ class ReflectionsViewController: UIViewController {
         ])
     }
     
-    private func configureTitleLabel() {
+    private func setupTitleLabel() {
         let titleAttributedString = NSAttributedString(
             string: "Reflections",
             attributes: TypographyEmphasized.largeTitle
@@ -105,8 +105,8 @@ class ReflectionsViewController: UIViewController {
         ])
     }
     
-    private func configureDateLabel() {
-        dateView.backgroundColor = UIColor(named: "Bluemarine")
+    private func setupDateLabel() {
+        dateView.backgroundColor = UIColor(named: "BTint100")
         dateView.layer.cornerRadius = 24
         dateView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -118,14 +118,14 @@ class ReflectionsViewController: UIViewController {
             attributes: TypographyRegular.headline
         )
         dateLabel.attributedText = dateAttributedString
-        dateLabel.textColor = UIColor(named: "White")
+        dateLabel.textColor = UIColor(named: "MascotWhite")
         dateLabel.textAlignment = .center
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let iconImageView = UIImageView()
         iconImageView.image = UIImage(systemName: "calendar")
         iconImageView.contentMode = .scaleAspectFit
-        iconImageView.tintColor = UIColor(named: "White")
+        iconImageView.tintColor = UIColor(named: "MascotWhite")
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         
         let contentStackView = UIStackView(arrangedSubviews: [iconImageView, dateLabel])
@@ -151,7 +151,7 @@ class ReflectionsViewController: UIViewController {
         ])
     }
     
-    private func configureReflections() {
+    private func setupReflections() {
         reflectionsScrollView.showsVerticalScrollIndicator = false
         reflectionsScrollView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -192,28 +192,6 @@ class ReflectionsViewController: UIViewController {
             reflectionTopicLabel.attributedText = topicAttributedString
             reflectionTopicLabel.translatesAutoresizingMaskIntoConstraints = false
             
-            let reflectionHardSkillsLabel = UILabel()
-            var hardSkillsString = ""
-            if let skills = reflection.skill {
-                let hardSkills = skills
-                    .filter { $0.type == "hardskill" }
-                    .map { $0.name }
-                
-                if hardSkills.isEmpty {
-                    hardSkillsString = "Hard skills : -"
-                } else {
-                    hardSkillsString = "Hard skills : \(hardSkills.joined(separator: ", "))"
-                }
-            } else {
-                hardSkillsString = "Hard skills : -"
-            }
-            let hardSkillsAttributedString = NSAttributedString(
-                string: hardSkillsString,
-                attributes: TypographyRegular.footnote
-            )
-            reflectionHardSkillsLabel.attributedText = hardSkillsAttributedString
-            reflectionHardSkillsLabel.translatesAutoresizingMaskIntoConstraints = false
-            
             let reflectionSoftSkillsLabel = UILabel()
             var softSkillsString = ""
             if let skills = reflection.skill {
@@ -236,6 +214,29 @@ class ReflectionsViewController: UIViewController {
             reflectionSoftSkillsLabel.attributedText = softSkillsAttributedString
             reflectionSoftSkillsLabel.translatesAutoresizingMaskIntoConstraints = false
             
+            
+            let reflectionHardSkillsLabel = UILabel()
+            var hardSkillsString = ""
+            if let skills = reflection.skill {
+                let hardSkills = skills
+                    .filter { $0.type == "hardskill" }
+                    .map { $0.name }
+                
+                if hardSkills.isEmpty {
+                    hardSkillsString = "Hard skills : -"
+                } else {
+                    hardSkillsString = "Hard skills : \(hardSkills.joined(separator: ", "))"
+                }
+            } else {
+                hardSkillsString = "Hard skills : -"
+            }
+            let hardSkillsAttributedString = NSAttributedString(
+                string: hardSkillsString,
+                attributes: TypographyRegular.footnote
+            )
+            reflectionHardSkillsLabel.attributedText = hardSkillsAttributedString
+            reflectionHardSkillsLabel.translatesAutoresizingMaskIntoConstraints = false
+            
             let horizontalLineView: UIView = UIView()
             horizontalLineView.backgroundColor = .separator
             horizontalLineView.translatesAutoresizingMaskIntoConstraints = false
@@ -249,16 +250,16 @@ class ReflectionsViewController: UIViewController {
             reflectionDateLabel.translatesAutoresizingMaskIntoConstraints = false
             
             let reflectionView = UIView()
-            reflectionView.backgroundColor = .systemGray6
+            reflectionView.backgroundColor = UIColor(named: "FilledCardPurp")
             reflectionView.layer.cornerRadius = 20
-
-            if let borderColor = UIColor(named: "Bluemarine")?.cgColor {
+            
+            if let borderColor = UIColor(named: "BTint100")?.cgColor {
                 reflectionView.layer.borderColor = borderColor
             }
-
+            
             reflectionView.layer.borderWidth = 2
             
-            if let shadowColor = UIColor(named: "Bluemarine")?.cgColor {
+            if let shadowColor = UIColor(named: "BTint100")?.cgColor {
                 reflectionView.layer.shadowColor = shadowColor
                 reflectionView.layer.shadowOpacity = 1.0
                 reflectionView.layer.shadowOffset = CGSize(width: 0, height: 4)
@@ -267,7 +268,7 @@ class ReflectionsViewController: UIViewController {
             
             reflectionView.translatesAutoresizingMaskIntoConstraints = false
             
-            let reflectionDetailStack = UIStackView(arrangedSubviews: [reflectionTopicLabel, reflectionHardSkillsLabel, reflectionSoftSkillsLabel, horizontalLineView, reflectionDateLabel])
+            let reflectionDetailStack = UIStackView(arrangedSubviews: [reflectionTopicLabel, reflectionSoftSkillsLabel, reflectionHardSkillsLabel, horizontalLineView, reflectionDateLabel])
             reflectionDetailStack.axis = .vertical
             reflectionDetailStack.spacing = 16
             reflectionDetailStack.translatesAutoresizingMaskIntoConstraints = false

@@ -12,6 +12,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "Frame 9@1x 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -22,6 +23,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "HeaderImage@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -37,6 +39,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "Frame 9@2x 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -47,6 +50,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "HeaderImage@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -62,6 +66,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "Frame 9@3x 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -72,6 +77,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "HeaderImage@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

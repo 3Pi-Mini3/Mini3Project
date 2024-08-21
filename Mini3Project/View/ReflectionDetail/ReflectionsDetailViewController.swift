@@ -4,7 +4,7 @@ class ReflectionDetailViewController: UIViewController {
     var reflection: Reflection?
     
     private let scrollView = UIScrollView()
-    private let contentView = UIView()
+    private let contentView = UIStackView()
     
     private let softSkillsContainer: UIStackView = UIStackView()
     private let softSkillsTitleLabel: UILabel = UILabel()
@@ -37,23 +37,25 @@ class ReflectionDetailViewController: UIViewController {
     
     private func setupScrollView() {
         view.addSubview(scrollView)
+        scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
         scrollView.addSubview(contentView)
+        contentView.axis = .vertical
+        contentView.spacing = 24
         contentView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            contentView.heightAnchor.constraint(equalToConstant: 1000) // Set a large enough value or dynamically calculate based on content
         ])
     }
     
@@ -64,7 +66,7 @@ class ReflectionDetailViewController: UIViewController {
         
         softSkillsTitleLabel.attributedText = NSAttributedString(
             string: "Soft Skills",
-            attributes: TypographyRegular.headline
+            attributes: TypographyEmphasized.title2
         )
         softSkillsTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -73,24 +75,30 @@ class ReflectionDetailViewController: UIViewController {
         softSkillsList.translatesAutoresizingMaskIntoConstraints = false
         
         if let skills = reflection?.skill {
-            let softSkills = skills
-                .filter { $0.type == "softskill" }
-                .map { $0.name }
-            
-            for skill in softSkills {
-                let skillView = createSkillView(skillName: skill, borderColorName: "YellowButton")
-                softSkillsList.addArrangedSubview(skillView)
+            if skills.isEmpty {
+                let textLabel = UILabel()
+                textLabel.text = "You did not get any soft skills."
+                textLabel.textColor = .systemGray2
+                softSkillsList.addArrangedSubview(textLabel)
+            } else {
+                let softSkills = skills
+                    .filter { $0.type == "softskill" }
+                    .map { $0.name }
+                
+                for skill in softSkills {
+                    let skillView = createSkillView(skillName: skill)
+                    softSkillsList.addArrangedSubview(skillView)
+                }
             }
         }
         
         softSkillsContainer.addArrangedSubview(softSkillsTitleLabel)
         softSkillsContainer.addArrangedSubview(softSkillsList)
-        contentView.addSubview(softSkillsContainer)
+        contentView.addArrangedSubview(softSkillsContainer)
         
         NSLayoutConstraint.activate([
-            softSkillsContainer.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            softSkillsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            softSkillsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+            softSkillsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            softSkillsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
     
@@ -101,7 +109,7 @@ class ReflectionDetailViewController: UIViewController {
         
         hardSkillsTitleLabel.attributedText = NSAttributedString(
             string: "Hard Skills",
-            attributes: TypographyRegular.headline
+            attributes: TypographyEmphasized.title2
         )
         hardSkillsTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -110,24 +118,30 @@ class ReflectionDetailViewController: UIViewController {
         hardSkillsList.translatesAutoresizingMaskIntoConstraints = false
         
         if let skills = reflection?.skill {
-            let hardSkills = skills
-                .filter { $0.type == "hardskill" }
-                .map { $0.name }
-            
-            for skill in hardSkills {
-                let skillView = createSkillView(skillName: skill, borderColorName: "BTint200")
-                hardSkillsList.addArrangedSubview(skillView)
+            if skills.isEmpty {
+                let textLabel = UILabel()
+                textLabel.text = "You did not get any hard skills."
+                textLabel.textColor = .systemGray2
+                hardSkillsList.addArrangedSubview(textLabel)
+            } else {
+                let hardSkills = skills
+                    .filter { $0.type == "hardskill" }
+                    .map { $0.name }
+                
+                for skill in hardSkills {
+                    let skillView = createSkillView(skillName: skill)
+                    hardSkillsList.addArrangedSubview(skillView)
+                }
             }
         }
         
         hardSkillsContainer.addArrangedSubview(hardSkillsTitleLabel)
         hardSkillsContainer.addArrangedSubview(hardSkillsList)
-        contentView.addSubview(hardSkillsContainer)
+        contentView.addArrangedSubview(hardSkillsContainer)
         
         NSLayoutConstraint.activate([
-            hardSkillsContainer.topAnchor.constraint(equalTo: softSkillsContainer.bottomAnchor, constant: 24),
-            hardSkillsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            hardSkillsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+            hardSkillsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            hardSkillsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
     
@@ -138,18 +152,18 @@ class ReflectionDetailViewController: UIViewController {
         
         summaryTitleLabel.attributedText = NSAttributedString(
             string: "Summary",
-            attributes: TypographyRegular.headline
+            attributes: TypographyEmphasized.title2
         )
         summaryTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        summaryBackgroundView.backgroundColor = UIColor(named: "Info")?.withAlphaComponent(0.2)
+        summaryBackgroundView.backgroundColor = UIColor(named: "BTint200")?.withAlphaComponent(0.2)
         summaryBackgroundView.layer.cornerRadius = 8
-        summaryBackgroundView.layer.borderColor = UIColor(named: "Info")?.cgColor
+        summaryBackgroundView.layer.borderColor = UIColor(named: "BTint200")?.cgColor
         summaryBackgroundView.layer.borderWidth = 1
         summaryBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         
         summaryTextLabel.attributedText = NSAttributedString(
-            string: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis?Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis?",
+            string: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis?Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis?Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Blanditiis deserunt similique iure perspiciatis quis obcaecati nam? Tenetur vel dolore, optio qui harum laudantium id omnis officiis commodi corporis quas quis?",
             attributes: TypographyRegular.body
         )
         summaryTextLabel.numberOfLines = 0
@@ -158,12 +172,11 @@ class ReflectionDetailViewController: UIViewController {
         summaryBackgroundView.addSubview(summaryTextLabel)
         summaryContainer.addArrangedSubview(summaryTitleLabel)
         summaryContainer.addArrangedSubview(summaryBackgroundView)
-        contentView.addSubview(summaryContainer)
+        contentView.addArrangedSubview(summaryContainer)
         
         NSLayoutConstraint.activate([
-            summaryContainer.topAnchor.constraint(equalTo: hardSkillsContainer.bottomAnchor, constant: 24),
-            summaryContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            summaryContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            summaryContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            summaryContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
             summaryBackgroundView.widthAnchor.constraint(equalTo: summaryContainer.widthAnchor),
             
@@ -174,13 +187,13 @@ class ReflectionDetailViewController: UIViewController {
         ])
     }
     
-    private func createSkillView(skillName: String, borderColorName: String) -> UIView {
+    private func createSkillView(skillName: String) -> UIView {
         let skillView = UIView()
-        if let borderColor = UIColor(named: borderColorName)?.cgColor {
+        if let borderColor = UIColor(named: "BTint200")?.cgColor {
             skillView.layer.borderColor = borderColor
         }
         skillView.layer.borderWidth = 1
-        skillView.backgroundColor = UIColor(named: borderColorName)?.withAlphaComponent(0.2)
+        skillView.backgroundColor = UIColor(named: "BTint200")?.withAlphaComponent(0.2)
         skillView.layer.cornerRadius = 8
         skillView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -194,7 +207,7 @@ class ReflectionDetailViewController: UIViewController {
         let iconImageView = UIImageView()
         iconImageView.image = UIImage(systemName: "checkmark.seal.fill")
         iconImageView.contentMode = .scaleAspectFit
-        iconImageView.tintColor = UIColor(named: borderColorName)
+        iconImageView.tintColor = UIColor(named: "BTint200")
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         
         skillView.addSubview(iconImageView)
