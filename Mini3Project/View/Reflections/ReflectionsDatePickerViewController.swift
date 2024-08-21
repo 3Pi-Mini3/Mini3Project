@@ -41,9 +41,7 @@ class ReflectionsDatePickerViewController: UIViewController {
     }
     
     private func configureYearPicker() {
-        guard let viewModel = viewModel else { return }
-        
-        let yearString = viewModel.getCurrentYear()
+        let yearString = Utilities.getCurrentDateFormatted(format: "yyyy")
         
         yearLabel.text = yearString
         let yearAttributedString = NSAttributedString(
@@ -172,14 +170,14 @@ class ReflectionsDatePickerViewController: UIViewController {
     private func updateYearLabel() {
         guard let viewModel = viewModel else { return }
         
-        let yearString = viewModel.getCurrentYear()
+        let yearString = Utilities.getCurrentDateFormatted(format: "yyyy")
         yearLabel.text = yearString
     }
     
     private func updateMonthLabels() {
         guard let viewModel = viewModel else { return }
         
-        let currentMonth = viewModel.getCurrentMonth()
+        let currentMonth = Utilities.getCurrentDateFormatted(format: "MMM")
         
         for subview in monthPickerStack.arrangedSubviews {
             if let stackView = subview as? UIStackView {

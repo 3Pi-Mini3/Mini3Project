@@ -69,30 +69,6 @@ class ReflectionsViewModel {
         container?.mainContext.insert(skill7)
     }
     
-    func getCurrentDateFormatted() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM, yyyy"
-        return dateFormatter.string(from: date)
-    }
-    
-    func getReflectionDateFormatted(reflection: Reflection) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd MMMM yyyy"
-        return dateFormatter.string(from: reflection.createdAt)
-    }
-    
-    func getCurrentMonth() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM"
-        return dateFormatter.string(from: date)
-    }
-    
-    func getCurrentYear() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy"
-        return dateFormatter.string(from: date)
-    }
-    
     func filterReflectionsByMonthAndYear() {
         let calendar = Calendar.current
         let targetComponents = calendar.dateComponents([.year, .month], from: date)

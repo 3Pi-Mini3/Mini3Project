@@ -8,19 +8,33 @@
 import Foundation
 
 struct Utilities {
-    static func getReflectionSkills(from reflection: Reflection, filteringBy skillType: String? = nil) -> [Skill] {
+    static func getReflectionSkillsName(from reflection: Reflection, filteringBy skillType: String? = nil) -> [String] {
         guard let skills = reflection.skill else {
             return []
         }
-
-        if skillType == nil {
-            return skills
+        
+        if let skillType = skillType {
+            return skills.filter { $0.type == skillType }.map { $0.name }
+        } else {
+            return skills.map { $0.name }
         }
-
-        return skills.filter { $0.type == skillType }
     }
     
-//    static func getReflectionSummary(from reflection: Reflection) -> String {
-//        return reflection.summary
-//    }
+    //    static func getReflectionSummary(from reflection: Reflection) -> String {
+    //        return reflection.summary
+    //    }
+    
+    static func getReflectionDateFormatted(from reflection: Reflection, format: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        
+        return dateFormatter.string(from: reflection.createdAt)
+    }
+    
+    static func getCurrentDateFormatted(format: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        
+        return dateFormatter.string(from: Date())
+    }
 }
