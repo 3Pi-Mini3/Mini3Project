@@ -75,16 +75,16 @@ class ReflectionDetailViewController: UIViewController {
         softSkillsList.translatesAutoresizingMaskIntoConstraints = false
         
         if let skills = reflection?.skill {
-            if skills.isEmpty {
+            let softSkills = skills
+                .filter { $0.type == "softskill" }
+                .map { $0.name }
+            
+            if softSkills.isEmpty {
                 let textLabel = UILabel()
                 textLabel.text = "You did not get any soft skills."
                 textLabel.textColor = .systemGray2
                 softSkillsList.addArrangedSubview(textLabel)
             } else {
-                let softSkills = skills
-                    .filter { $0.type == "softskill" }
-                    .map { $0.name }
-                
                 for skill in softSkills {
                     let skillView = createSkillView(skillName: skill)
                     softSkillsList.addArrangedSubview(skillView)
@@ -118,16 +118,16 @@ class ReflectionDetailViewController: UIViewController {
         hardSkillsList.translatesAutoresizingMaskIntoConstraints = false
         
         if let skills = reflection?.skill {
-            if skills.isEmpty {
+            let hardSkills = skills
+                .filter { $0.type == "hardskill" }
+                .map { $0.name }
+            
+            if hardSkills.isEmpty {
                 let textLabel = UILabel()
                 textLabel.text = "You did not get any hard skills."
                 textLabel.textColor = .systemGray2
                 hardSkillsList.addArrangedSubview(textLabel)
             } else {
-                let hardSkills = skills
-                    .filter { $0.type == "hardskill" }
-                    .map { $0.name }
-                
                 for skill in hardSkills {
                     let skillView = createSkillView(skillName: skill)
                     hardSkillsList.addArrangedSubview(skillView)
