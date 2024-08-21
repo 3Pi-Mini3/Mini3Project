@@ -20,8 +20,17 @@ class ReflectionsViewController: UIViewController {
     private let reflectionsStack: UIStackView = UIStackView()
     private let reflectionsScrollView: UIScrollView = UIScrollView()
     
-    var viewModel: ReflectionsViewModel = ReflectionsViewModel()
+    private var viewModel: ReflectionsViewModel
     private var cancellables: Set<AnyCancellable> = []
+    
+    init(viewModel: ReflectionsViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -304,11 +313,11 @@ class ReflectionsViewController: UIViewController {
         
         let reflection = viewModel.filteredReflections[index]
         
-        let detailViewController = ReflectionDetailViewController()
-        detailViewController.reflection = reflection
-        detailViewController.title = "Reflection Detail"
+        let reflectionDetailViewModel = ReflectionDetailViewModel(reflection: reflection)
+        let reflectionDetailViewController = ReflectionDetailViewController(viewModel: reflectionDetailViewModel)
+        reflectionDetailViewController.title = "Reflection Detail"
         
-        navigationController?.pushViewController(detailViewController, animated: true)
+        navigationController?.pushViewController(reflectionDetailViewController, animated: true)
     }
     
     @objc private func openDatePicker() {

@@ -20,7 +20,7 @@ class CustomTabBarController: UITabBarController {
             setupTabBar()
 
             let firstVC = SkillsViewController()
-            let secondVC = ReflectionsViewController()
+            let secondVC = ReflectionsViewController(viewModel: ReflectionsViewModel())
 
             let firstVCIcon = UIImage(systemName: "target")?.withRenderingMode(.alwaysOriginal)
             let secondVCIcon = UIImage(systemName: "book.pages.fill")?.withRenderingMode(.alwaysOriginal)
