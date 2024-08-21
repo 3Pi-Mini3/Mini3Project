@@ -31,10 +31,10 @@ struct Utilities {
         return dateFormatter.string(from: reflection.createdAt)
     }
     
-    static func getCurrentDateFormatted(format: String) -> String {
+    static func getDateFormatted(date: Date, format: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         
-        return dateFormatter.string(from: Date())
+        return dateFormatter.string(from: date)
     }
 }
