@@ -36,7 +36,7 @@ class ReflectionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        viewModel.generateData()
+        //        viewModel.generateData()
         viewModel.loadData()
         
         setupView()
@@ -98,11 +98,10 @@ class ReflectionsViewController: UIViewController {
     }
     
     private func setupTitleLabel() {
-        let titleAttributedString = NSAttributedString(
+        titleLabel.attributedText = NSAttributedString(
             string: "Reflections",
             attributes: TypographyEmphasized.largeTitle
         )
-        titleLabel.attributedText = titleAttributedString
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(titleLabel)
@@ -194,11 +193,11 @@ class ReflectionsViewController: UIViewController {
         
         for reflection in viewModel.filteredReflections {
             let reflectionTopicLabel = UILabel()
-            let topicAttributedString = NSAttributedString(
+            
+            reflectionTopicLabel.attributedText = NSAttributedString(
                 string: reflection.topic,
                 attributes: TypographyRegular.headline
             )
-            reflectionTopicLabel.attributedText = topicAttributedString
             reflectionTopicLabel.translatesAutoresizingMaskIntoConstraints = false
             
             let reflectionSoftSkillsLabel = UILabel()
@@ -216,11 +215,10 @@ class ReflectionsViewController: UIViewController {
             } else {
                 softSkillsString = "Hard skills : -"
             }
-            let softSkillsAttributedString = NSAttributedString(
+            reflectionSoftSkillsLabel.attributedText = NSAttributedString(
                 string: softSkillsString,
                 attributes: TypographyRegular.footnote
             )
-            reflectionSoftSkillsLabel.attributedText = softSkillsAttributedString
             reflectionSoftSkillsLabel.translatesAutoresizingMaskIntoConstraints = false
             
             
@@ -251,11 +249,10 @@ class ReflectionsViewController: UIViewController {
             horizontalLineView.translatesAutoresizingMaskIntoConstraints = false
             
             let reflectionDateLabel = UILabel()
-            let dateAttributedString = NSAttributedString(
+            reflectionDateLabel.attributedText = NSAttributedString(
                 string:  viewModel.getReflectionDateFormatted(reflection: reflection),
                 attributes: TypographyRegular.caption1
             )
-            reflectionDateLabel.attributedText = dateAttributedString
             reflectionDateLabel.translatesAutoresizingMaskIntoConstraints = false
             
             let reflectionView = UIView()
