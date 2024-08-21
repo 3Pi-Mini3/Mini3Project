@@ -19,7 +19,7 @@ class CustomTabBarController: UITabBarController {
 
             setupTabBar()
 
-            let firstVC = MainViewController()
+            let firstVC = SkillsViewController()
             let secondVC = ReflectionsViewController()
 
             let firstVCIcon = UIImage(systemName: "target")?.withRenderingMode(.alwaysOriginal)
