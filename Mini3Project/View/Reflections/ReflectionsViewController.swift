@@ -22,7 +22,7 @@ class ReflectionsViewController: UIViewController {
     private lazy var reflectionsEmptyStateContainer: UIView = UIView()
     private lazy var reflectionsEmptyStateImageView: UIImageView = UIImageView()
     private lazy var reflectionsEmptyStateLabel: UILabel = UILabel()
-        
+    
     init(viewModel: ReflectionsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -186,31 +186,9 @@ class ReflectionsViewController: UIViewController {
         viewModel.filterReflectionsByMonthAndYear()
         
         if viewModel.filteredReflections.isEmpty {
-            reflectionsEmptyStateImageView.image = UIImage(named: "MascotSad")
-            reflectionsEmptyStateImageView.contentMode = .scaleAspectFit
-            reflectionsEmptyStateImageView.translatesAutoresizingMaskIntoConstraints = false
+            let emptyStateView = EmptyStateView(imageName: "MascotSad", desc: "You don't have any reflections this month")
             
-            reflectionsEmptyStateLabel.text = "You don't have any reflections this month"
-            reflectionsEmptyStateLabel.textColor = .systemGray2
-            reflectionsEmptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
-            
-            reflectionsEmptyStateContainer.translatesAutoresizingMaskIntoConstraints = false
-            
-            reflectionsEmptyStateContainer.addSubview(reflectionsEmptyStateImageView)
-            reflectionsEmptyStateContainer.addSubview(reflectionsEmptyStateLabel)
-            view.addSubview(reflectionsEmptyStateContainer)
-            
-            NSLayoutConstraint.activate([
-                reflectionsEmptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
-                reflectionsEmptyStateImageView.heightAnchor.constraint(equalToConstant: 150),
-                reflectionsEmptyStateImageView.centerXAnchor.constraint(equalTo: reflectionsStack.centerXAnchor),
-                
-                reflectionsEmptyStateLabel.topAnchor.constraint(equalTo: reflectionsEmptyStateImageView.bottomAnchor),
-                reflectionsEmptyStateLabel.centerXAnchor.constraint(equalTo: reflectionsStack.centerXAnchor),
-                
-                reflectionsEmptyStateContainer.topAnchor.constraint(equalTo: dateView.bottomAnchor, constant: 64),
-            ])
-            
+            reflectionsStack.addArrangedSubview(emptyStateView)
         } else {
             for reflection in viewModel.filteredReflections {
                 let reflectionTopicLabel = UILabel()
