@@ -24,49 +24,33 @@ class ReflectionsViewModel {
         skills = (try? container?.mainContext.fetch(skillDescriptor)) ?? []
     }
     
-    func generateData() {
-        let reflection1 = Reflection(topic: "topic 1", answers: ["ans1", "ans2"], createdAt: Date())
-        let reflection2 = Reflection(topic: "topic 2", answers: ["ans1", "ans2"], createdAt: Date())
-        let reflection3 = Reflection(topic: "topic 3", answers: ["ans1", "ans2"], createdAt: Date())
-        
-        var reflection4: Reflection? = nil
-        var dateComponents = DateComponents()
-        dateComponents.year = 2024
-        dateComponents.month = 7
-        dateComponents.day = 18
-        dateComponents.hour = 10
-        dateComponents.minute = 30
-        
-        if let specificDate = Calendar.current.date(from: dateComponents) {
-            reflection4 = Reflection(topic: "topic 4", answers: ["ans1", "ans2"], createdAt: specificDate)
+    func createReflection(topic: String, answers: [String], hardSkills: [String], softSkills: [String], summary: String) {
+        guard let context = container?.mainContext else {
+            print("Error: Main context is nil")
+            return
         }
         
-        container?.mainContext.insert(reflection1)
-        container?.mainContext.insert(reflection2)
-        container?.mainContext.insert(reflection3)
+        let newReflection = Reflection(topic: topic, answers: answers, summary: summary, createdAt: Date())
         
-        if let reflection4 = reflection4 {
-            container?.mainContext.insert(reflection4)
+        context.insert(newReflection)
+        
+        for skillName in hardSkills {
+            let skill = Skill(name: skillName, role: "tech", type: "hardskill", reflection: newReflection)
+            context.insert(skill)
         }
         
-        let skill1 = Skill(name: "softskill 1", role: "tech", type: "softskill", reflection: reflection1)
-        let skill2 = Skill(name: "hardskill 1", role: "tech", type: "hardskill", reflection: reflection1)
+        for skillName in softSkills {
+            let skill = Skill(name: skillName, role: "tech", type: "softskill", reflection: newReflection)
+            context.insert(skill)
+        }
         
-        let skill3 = Skill(name: "softskill 2", role: "tech", type: "softskill", reflection: reflection1)
-        let skill4 = Skill(name: "hardskill 2", role: "tech", type: "hardskill", reflection: reflection1)
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save new reflection and skills: \(error)")
+        }
         
-        let skill5 = Skill(name: "softskill 3", role: "tech", type: "softskill", reflection: reflection3)
-        let skill6 = Skill(name: "hardskill 3", role: "tech", type: "hardskill", reflection: reflection3)
-        
-        let skill7 = Skill(name: "hardskill 4", role: "tech", type: "hardskill", reflection: reflection4)
-        
-        container?.mainContext.insert(skill1)
-        container?.mainContext.insert(skill2)
-        container?.mainContext.insert(skill3)
-        container?.mainContext.insert(skill4)
-        container?.mainContext.insert(skill5)
-        container?.mainContext.insert(skill6)
-        container?.mainContext.insert(skill7)
+        loadData()
     }
     
     func getCurrentDateFormatted() -> String {
