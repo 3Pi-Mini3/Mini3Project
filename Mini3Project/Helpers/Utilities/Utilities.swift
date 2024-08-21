@@ -24,14 +24,7 @@ struct Utilities {
     //        return reflection.summary
     //    }
     
-    static func getReflectionDateFormatted(from reflection: Reflection, format: String) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = format
-        
-        return dateFormatter.string(from: reflection.createdAt)
-    }
-    
-    static func getDateFormatted(date: Date, format: String) -> String {
+    static func getDateFormatted(from date: Date, format: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         

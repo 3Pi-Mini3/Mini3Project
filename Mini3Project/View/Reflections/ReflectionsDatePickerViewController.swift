@@ -41,7 +41,7 @@
         }
         
         private func configureYearPicker() {
-            let yearString = Utilities.getDateFormatted(date: Date(),format: "yyyy")
+            let yearString = Utilities.getDateFormatted(from: Date(), format: "yyyy")
             
             yearLabel.text = yearString
             let yearAttributedString = NSAttributedString(
@@ -169,14 +169,14 @@
         private func updateYearLabel() {
             guard let viewModel = viewModel else { return }
 
-            let yearString = Utilities.getDateFormatted(date: viewModel.date, format: "yyyy")
+            let yearString = Utilities.getDateFormatted(from: viewModel.date, format: "yyyy")
             yearLabel.text = yearString
         }
         
         private func updateMonthLabels() {
             guard let viewModel = viewModel else { return }
             
-            let selectedMonth = Utilities.getDateFormatted(date: viewModel.date, format: "MMM")
+            let selectedMonth = Utilities.getDateFormatted(from: viewModel.date, format: "MMM")
             
             for subview in monthPickerStack.arrangedSubviews {
                 if let stackView = subview as? UIStackView {
