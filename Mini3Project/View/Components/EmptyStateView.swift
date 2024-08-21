@@ -6,7 +6,7 @@ class EmptyStateView: UIView {
     
     private lazy var emptyStateImageView: UIImageView = UIImageView()
     private lazy var emptyStateLabel: UILabel = UILabel()
-
+    
     init(imageName: String, desc: String) {
         self.imageName = imageName
         self.desc = desc
@@ -26,7 +26,7 @@ class EmptyStateView: UIView {
         emptyStateLabel.text = desc
         emptyStateLabel.textColor = .systemGray2
         emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
-                
+        
         addSubview(emptyStateImageView)
         addSubview(emptyStateLabel)
         

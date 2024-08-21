@@ -9,7 +9,7 @@ class ReflectionsViewController: UIViewController {
     private lazy var headerContainer: UIView = UIView()
     private lazy var headerImageView: UIImageView = UIImageView()
     
-    private lazy var reflectionsContainer: UIView = UIView()
+    private lazy var mainContainer: UIView = UIView()
     
     private lazy var titleLabel: UILabel = UILabel()
     
@@ -18,10 +18,6 @@ class ReflectionsViewController: UIViewController {
     
     private lazy var reflectionsStack: UIStackView = UIStackView()
     private lazy var reflectionsScrollView: UIScrollView = UIScrollView()
-    
-    private lazy var reflectionsEmptyStateContainer: UIView = UIView()
-    private lazy var reflectionsEmptyStateImageView: UIImageView = UIImageView()
-    private lazy var reflectionsEmptyStateLabel: UILabel = UILabel()
     
     init(viewModel: ReflectionsViewModel) {
         self.viewModel = viewModel
@@ -40,7 +36,7 @@ class ReflectionsViewController: UIViewController {
         
         setupView()
         setupHeaderView()
-        setupRelfectionsView()
+        setupReflectionsView()
         setupTitleLabel()
         setupDateLabel()
         setupReflections()
@@ -75,20 +71,20 @@ class ReflectionsViewController: UIViewController {
         ])
     }
     
-    private func setupRelfectionsView() {
-        reflectionsContainer.backgroundColor = .systemBackground
-        reflectionsContainer.layer.cornerRadius = 50
-        reflectionsContainer.layer.maskedCorners = [.layerMaxXMinYCorner]
-        reflectionsContainer.layer.masksToBounds = true
-        reflectionsContainer.translatesAutoresizingMaskIntoConstraints = false
+    private func setupReflectionsView() {
+        mainContainer.backgroundColor = .systemBackground
+        mainContainer.layer.cornerRadius = 50
+        mainContainer.layer.maskedCorners = [.layerMaxXMinYCorner]
+        mainContainer.layer.masksToBounds = true
+        mainContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(reflectionsContainer)
+        view.addSubview(mainContainer)
         
         NSLayoutConstraint.activate([
-            reflectionsContainer.topAnchor.constraint(equalTo: headerContainer.bottomAnchor),
-            reflectionsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            reflectionsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            reflectionsContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            mainContainer.topAnchor.constraint(equalTo: headerContainer.bottomAnchor),
+            mainContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mainContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
     
@@ -102,9 +98,9 @@ class ReflectionsViewController: UIViewController {
         view.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: reflectionsContainer.topAnchor, constant: 32),
-            titleLabel.leadingAnchor.constraint(equalTo: reflectionsContainer.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: reflectionsContainer.trailingAnchor, constant: -16),
+            titleLabel.topAnchor.constraint(equalTo: mainContainer.topAnchor, constant: 32),
+            titleLabel.leadingAnchor.constraint(equalTo: mainContainer.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: mainContainer.trailingAnchor, constant: -16),
         ])
     }
     
@@ -191,92 +187,16 @@ class ReflectionsViewController: UIViewController {
             reflectionsStack.addArrangedSubview(emptyStateView)
         } else {
             for reflection in viewModel.filteredReflections {
-                let reflectionTopicLabel = UILabel()
-                reflectionTopicLabel.attributedText = NSAttributedString(
-                    string: reflection.topic,
-                    attributes: TypographyRegular.headline
-                )
-                reflectionTopicLabel.translatesAutoresizingMaskIntoConstraints = false
-                
-                let reflectionSoftSkillsLabel = UILabel()
-                let softSkillsText: String
-                let softSkills = Utilities.getReflectionSkillsName(from: reflection, filteringBy: "softskill")
-                if softSkills.isEmpty {
-                    softSkillsText = "Soft skills: -"
-                } else {
-                    let skillNames = softSkills.joined(separator: ", ")
-                    softSkillsText = "Soft skills: \(skillNames)"
-                }
-                reflectionSoftSkillsLabel.attributedText = NSAttributedString(
-                    string: softSkillsText,
-                    attributes: TypographyRegular.footnote
-                )
-                reflectionSoftSkillsLabel.translatesAutoresizingMaskIntoConstraints = false
-                
-                let reflectionHardSkillsLabel = UILabel()
-                let hardSkillsText: String
-                let hardSkills = Utilities.getReflectionSkillsName(from: reflection, filteringBy: "hardskill")
-                if hardSkills.isEmpty {
-                    hardSkillsText = "Hard skills: -"
-                } else {
-                    let skillNames = hardSkills.joined(separator: ", ")
-                    hardSkillsText = "Hard skills: \(skillNames)"
-                }
-                reflectionHardSkillsLabel.attributedText = NSAttributedString(
-                    string: hardSkillsText,
-                    attributes: TypographyRegular.footnote
-                )
-                reflectionHardSkillsLabel.translatesAutoresizingMaskIntoConstraints = false
-                
-                let horizontalLineView: UIView = UIView()
-                horizontalLineView.backgroundColor = .separator
-                horizontalLineView.translatesAutoresizingMaskIntoConstraints = false
-                
-                let reflectionDateLabel = UILabel()
-                reflectionDateLabel.attributedText = NSAttributedString(
-                    string: Utilities.getDateFormatted(from: reflection.createdAt, format: "dd MMMM yyyy"),
-                    attributes: TypographyRegular.caption1
-                )
-                reflectionDateLabel.translatesAutoresizingMaskIntoConstraints = false
-                
-                let reflectionView = UIView()
-                reflectionView.backgroundColor = UIColor(named: "FilledCardPurp")
-                reflectionView.layer.cornerRadius = 20
-                if let borderColor = UIColor(named: "BTint100")?.cgColor {
-                    reflectionView.layer.borderColor = borderColor
-                }
-                reflectionView.layer.borderWidth = 2
-                if let shadowColor = UIColor(named: "BTint100")?.cgColor {
-                    reflectionView.layer.shadowColor = shadowColor
-                    reflectionView.layer.shadowOpacity = 1.0
-                    reflectionView.layer.shadowOffset = CGSize(width: 0, height: 4)
-                    reflectionView.layer.shadowRadius = 0
-                }
-                reflectionView.translatesAutoresizingMaskIntoConstraints = false
-                
-                let reflectionDetailStack = UIStackView(arrangedSubviews: [reflectionTopicLabel, reflectionSoftSkillsLabel, reflectionHardSkillsLabel, horizontalLineView, reflectionDateLabel])
-                reflectionDetailStack.axis = .vertical
-                reflectionDetailStack.spacing = 16
-                reflectionDetailStack.translatesAutoresizingMaskIntoConstraints = false
+                let reflectionCardView = ReflectionCardView(reflection: reflection)
                 
                 let tapGesture = UITapGestureRecognizer(target: self, action: #selector(goToReflectionDetail(_:)))
-                reflectionView.addGestureRecognizer(tapGesture)
+                reflectionCardView.addGestureRecognizer(tapGesture)
                 
-                reflectionView.addSubview(reflectionDetailStack)
-                reflectionsStack.addArrangedSubview(reflectionView)
+                reflectionsStack.addArrangedSubview(reflectionCardView)
                 
                 NSLayoutConstraint.activate([
-                    reflectionView.leadingAnchor.constraint(equalTo: reflectionsStack.leadingAnchor),
-                    reflectionView.trailingAnchor.constraint(equalTo: reflectionsStack.trailingAnchor),
-                    
-                    reflectionDetailStack.topAnchor.constraint(equalTo: reflectionView.topAnchor, constant: 16),
-                    reflectionDetailStack.leadingAnchor.constraint(equalTo: reflectionView.leadingAnchor, constant: 16),
-                    reflectionDetailStack.trailingAnchor.constraint(equalTo: reflectionView.trailingAnchor, constant: -16),
-                    reflectionDetailStack.bottomAnchor.constraint(equalTo: reflectionView.bottomAnchor, constant: -16),
-                    
-                    horizontalLineView.heightAnchor.constraint(equalToConstant: 1),
-                    horizontalLineView.leadingAnchor.constraint(equalTo: reflectionDetailStack.leadingAnchor),
-                    horizontalLineView.trailingAnchor.constraint(equalTo: reflectionDetailStack.trailingAnchor),
+                    reflectionCardView.leadingAnchor.constraint(equalTo: reflectionsStack.leadingAnchor),
+                    reflectionCardView.trailingAnchor.constraint(equalTo: reflectionsStack.trailingAnchor)
                 ])
             }
         }
