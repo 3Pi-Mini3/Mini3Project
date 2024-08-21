@@ -91,7 +91,7 @@ class ReflectionDetailViewController: UIViewController {
             softSkillsList.addArrangedSubview(textLabel)
         } else {
             for skill in softSkills {
-                let skillView = createSkillView(skillName: skill)
+                let skillView = SkillCardView(skillName: skill)
                 softSkillsList.addArrangedSubview(skillView)
             }
         }
@@ -129,7 +129,7 @@ class ReflectionDetailViewController: UIViewController {
             hardSkillsList.addArrangedSubview(textLabel)
         } else {
             for skill in hardSkills {
-                let skillView = createSkillView(skillName: skill)
+                let skillView = SkillCardView(skillName: skill)
                 hardSkillsList.addArrangedSubview(skillView)
             }
         }
@@ -185,46 +185,5 @@ class ReflectionDetailViewController: UIViewController {
             summaryTextLabel.trailingAnchor.constraint(equalTo: summaryTextContainer.trailingAnchor, constant: -16),
             summaryTextLabel.bottomAnchor.constraint(equalTo: summaryTextContainer.bottomAnchor, constant: -16)
         ])
-    }
-    
-    func createSkillView(skillName: String) -> UIView {
-        let skillView = UIView()
-        if let borderColor = UIColor(named: "BTint200")?.cgColor {
-            skillView.layer.borderColor = borderColor
-        }
-        skillView.layer.borderWidth = 1
-        skillView.backgroundColor = UIColor(named: "BTint200")?.withAlphaComponent(0.2)
-        skillView.layer.cornerRadius = 8
-        skillView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let skillLabel = UILabel()
-        skillLabel.attributedText = NSAttributedString(
-            string: skillName,
-            attributes: TypographyRegular.body
-        )
-        skillLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        let iconImageView = UIImageView()
-        iconImageView.image = UIImage(systemName: "checkmark.seal.fill")
-        iconImageView.contentMode = .scaleAspectFit
-        iconImageView.tintColor = UIColor(named: "BTint200")
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        skillView.addSubview(iconImageView)
-        skillView.addSubview(skillLabel)
-        
-        NSLayoutConstraint.activate([
-            skillView.heightAnchor.constraint(equalToConstant: 52),
-            
-            iconImageView.centerYAnchor.constraint(equalTo: skillView.centerYAnchor),
-            iconImageView.leadingAnchor.constraint(equalTo: skillView.leadingAnchor, constant: 12),
-            iconImageView.widthAnchor.constraint(equalToConstant: 28),
-            iconImageView.heightAnchor.constraint(equalToConstant: 28),
-            
-            skillLabel.centerYAnchor.constraint(equalTo: iconImageView.centerYAnchor),
-            skillLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8),
-        ])
-        
-        return skillView
     }
 }
