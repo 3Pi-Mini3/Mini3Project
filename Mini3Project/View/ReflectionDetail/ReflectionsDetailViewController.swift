@@ -1,23 +1,32 @@
 import UIKit
 
 class ReflectionDetailViewController: UIViewController {
-    var reflection: Reflection?
+    private var viewModel: ReflectionDetailViewModel
     
-    private let scrollView = UIScrollView()
-    private let contentView = UIStackView()
+    private lazy var scrollView = UIScrollView()
+    private lazy var contentView = UIStackView()
     
-    private let softSkillsContainer: UIStackView = UIStackView()
-    private let softSkillsTitleLabel: UILabel = UILabel()
-    private let softSkillsList: UIStackView = UIStackView()
+    private lazy var softSkillsContainer: UIStackView = UIStackView()
+    private lazy var softSkillsTitleLabel: UILabel = UILabel()
+    private lazy var softSkillsList: UIStackView = UIStackView()
     
-    private let hardSkillsContainer: UIStackView = UIStackView()
-    private let hardSkillsTitleLabel: UILabel = UILabel()
-    private let hardSkillsList: UIStackView = UIStackView()
+    private lazy var hardSkillsContainer: UIStackView = UIStackView()
+    private lazy var hardSkillsTitleLabel: UILabel = UILabel()
+    private lazy var hardSkillsList: UIStackView = UIStackView()
     
-    private let summaryContainer: UIStackView = UIStackView()
-    private let summaryTitleLabel: UILabel = UILabel()
-    private let summaryBackgroundView: UIView = UIView()
-    private let summaryTextLabel: UILabel = UILabel()
+    private lazy var summaryContainer: UIStackView = UIStackView()
+    private lazy var summaryTitleLabel: UILabel = UILabel()
+    private lazy var summaryTextContainer: UIView = UIView()
+    private lazy var summaryTextLabel: UILabel = UILabel()
+    
+    init(viewModel: ReflectionDetailViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,21 +83,16 @@ class ReflectionDetailViewController: UIViewController {
         softSkillsList.spacing = 8
         softSkillsList.translatesAutoresizingMaskIntoConstraints = false
         
-        if let skills = reflection?.skill {
-            let softSkills = skills
-                .filter { $0.type == "softskill" }
-                .map { $0.name }
-            
-            if softSkills.isEmpty {
-                let textLabel = UILabel()
-                textLabel.text = "You did not get any soft skills."
-                textLabel.textColor = .systemGray2
-                softSkillsList.addArrangedSubview(textLabel)
-            } else {
-                for skill in softSkills {
-                    let skillView = createSkillView(skillName: skill)
-                    softSkillsList.addArrangedSubview(skillView)
-                }
+        let softSkills = Utilities.getReflectionSkillsName(reflection: viewModel.getReflection(), skillType: "softskill")
+        if softSkills.isEmpty {
+            let textLabel = UILabel()
+            textLabel.text = "You did not get any soft skills."
+            textLabel.textColor = .systemGray2
+            softSkillsList.addArrangedSubview(textLabel)
+        } else {
+            for skill in softSkills {
+                let skillView = SkillCardView(skillName: skill)
+                softSkillsList.addArrangedSubview(skillView)
             }
         }
         
@@ -117,21 +121,16 @@ class ReflectionDetailViewController: UIViewController {
         hardSkillsList.spacing = 8
         hardSkillsList.translatesAutoresizingMaskIntoConstraints = false
         
-        if let skills = reflection?.skill {
-            let hardSkills = skills
-                .filter { $0.type == "hardskill" }
-                .map { $0.name }
-            
-            if hardSkills.isEmpty {
-                let textLabel = UILabel()
-                textLabel.text = "You did not get any hard skills."
-                textLabel.textColor = .systemGray2
-                hardSkillsList.addArrangedSubview(textLabel)
-            } else {
-                for skill in hardSkills {
-                    let skillView = createSkillView(skillName: skill)
-                    hardSkillsList.addArrangedSubview(skillView)
-                }
+        let hardSkills = Utilities.getReflectionSkillsName(reflection: viewModel.getReflection(), skillType: "hardskill")
+        if hardSkills.isEmpty {
+            let textLabel = UILabel()
+            textLabel.text = "You did not get any hard skills."
+            textLabel.textColor = .systemGray2
+            hardSkillsList.addArrangedSubview(textLabel)
+        } else {
+            for skill in hardSkills {
+                let skillView = SkillCardView(skillName: skill)
+                hardSkillsList.addArrangedSubview(skillView)
             }
         }
         
@@ -156,75 +155,34 @@ class ReflectionDetailViewController: UIViewController {
         )
         summaryTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        summaryBackgroundView.backgroundColor = UIColor(named: "BTint200")?.withAlphaComponent(0.2)
-        summaryBackgroundView.layer.cornerRadius = 8
-        summaryBackgroundView.layer.borderColor = UIColor(named: "BTint200")?.cgColor
-        summaryBackgroundView.layer.borderWidth = 1
-        summaryBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        summaryTextContainer.backgroundColor = UIColor(named: "BTint200")?.withAlphaComponent(0.2)
+        summaryTextContainer.layer.cornerRadius = 8
+        summaryTextContainer.layer.borderColor = UIColor(named: "BTint200")?.cgColor
+        summaryTextContainer.layer.borderWidth = 1
+        summaryTextContainer.translatesAutoresizingMaskIntoConstraints = false
         
         summaryTextLabel.attributedText = NSAttributedString(
-            string: reflection?.summary ?? "Summary is Empty",
+            string: Utilities.getReflectionSummary(reflection: viewModel.getReflection()),
             attributes: TypographyRegular.body
         )
         summaryTextLabel.numberOfLines = 0
         summaryTextLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        summaryBackgroundView.addSubview(summaryTextLabel)
+        summaryTextContainer.addSubview(summaryTextLabel)
         summaryContainer.addArrangedSubview(summaryTitleLabel)
-        summaryContainer.addArrangedSubview(summaryBackgroundView)
+        summaryContainer.addArrangedSubview(summaryTextContainer)
         contentView.addArrangedSubview(summaryContainer)
         
         NSLayoutConstraint.activate([
             summaryContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             summaryContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-            summaryBackgroundView.widthAnchor.constraint(equalTo: summaryContainer.widthAnchor),
+            summaryTextContainer.widthAnchor.constraint(equalTo: summaryContainer.widthAnchor),
             
-            summaryTextLabel.topAnchor.constraint(equalTo: summaryBackgroundView.topAnchor, constant: 16),
-            summaryTextLabel.leadingAnchor.constraint(equalTo: summaryBackgroundView.leadingAnchor, constant: 16),
-            summaryTextLabel.trailingAnchor.constraint(equalTo: summaryBackgroundView.trailingAnchor, constant: -16),
-            summaryTextLabel.bottomAnchor.constraint(equalTo: summaryBackgroundView.bottomAnchor, constant: -16)
+            summaryTextLabel.topAnchor.constraint(equalTo: summaryTextContainer.topAnchor, constant: 16),
+            summaryTextLabel.leadingAnchor.constraint(equalTo: summaryTextContainer.leadingAnchor, constant: 16),
+            summaryTextLabel.trailingAnchor.constraint(equalTo: summaryTextContainer.trailingAnchor, constant: -16),
+            summaryTextLabel.bottomAnchor.constraint(equalTo: summaryTextContainer.bottomAnchor, constant: -16)
         ])
-    }
-    
-    private func createSkillView(skillName: String) -> UIView {
-        let skillView = UIView()
-        if let borderColor = UIColor(named: "BTint200")?.cgColor {
-            skillView.layer.borderColor = borderColor
-        }
-        skillView.layer.borderWidth = 1
-        skillView.backgroundColor = UIColor(named: "BTint200")?.withAlphaComponent(0.2)
-        skillView.layer.cornerRadius = 8
-        skillView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let skillLabel = UILabel()
-        skillLabel.attributedText = NSAttributedString(
-            string: skillName,
-            attributes: TypographyRegular.body
-        )
-        skillLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        let iconImageView = UIImageView()
-        iconImageView.image = UIImage(systemName: "checkmark.seal.fill")
-        iconImageView.contentMode = .scaleAspectFit
-        iconImageView.tintColor = UIColor(named: "BTint200")
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        skillView.addSubview(iconImageView)
-        skillView.addSubview(skillLabel)
-        
-        NSLayoutConstraint.activate([
-            skillView.heightAnchor.constraint(equalToConstant: 52),
-            
-            iconImageView.centerYAnchor.constraint(equalTo: skillView.centerYAnchor),
-            iconImageView.leadingAnchor.constraint(equalTo: skillView.leadingAnchor, constant: 12),
-            iconImageView.widthAnchor.constraint(equalToConstant: 28),
-            iconImageView.heightAnchor.constraint(equalToConstant: 28),
-            
-            skillLabel.centerYAnchor.constraint(equalTo: iconImageView.centerYAnchor),
-            skillLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8),
-        ])
-        
-        return skillView
     }
 }
