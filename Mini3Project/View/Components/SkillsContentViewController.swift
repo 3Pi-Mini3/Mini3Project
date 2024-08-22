@@ -12,6 +12,16 @@ class SkillsContentViewController: UIViewController {
     private let hStackSpacing: CGFloat = 16
     private let cardHeight: CGFloat = 60
     
+    private var softSkill: [Skill] = []
+    private var hardSkill: [Skill] = []
+    private let skillsViewModel = SkillsViewModel()
+    
+    var selectedRole: String = "" {
+        didSet {
+            updateContent(forRole: selectedRole, softSkill: skillsViewModel.fetchSkills(forRole: "softskill", skillType: "softskill"), hardSkill: skillsViewModel.fetchSkills(forRole: selectedRole, skillType: "hardskill"))
+        }
+    }
+    
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -50,7 +60,9 @@ class SkillsContentViewController: UIViewController {
         ])
     }
     
-    func updateContent(forSegment segment: Int) {
+    func updateContent(forRole role: String, softSkill: [Skill], hardSkill: [Skill]) {
+        self.softSkill = softSkill
+        self.hardSkill = hardSkill
         contentView.subviews.forEach { $0.removeFromSuperview() }
         
         let mainStack = UIStackView()
@@ -71,16 +83,7 @@ class SkillsContentViewController: UIViewController {
         addTitleLabel(to: mainStack)
         addSpacing(to: mainStack, height: 16)
         
-        switch segment {
-        case 0:
-            addContentStack(to: mainStack, title1: "Soft Skills", title2: "Hard Skills", skills1: ["Communication", "Critical Thinking", "Public Speaking"], skills2: ["SwiftUI", "UIKit", "MVVM"])
-        case 1:
-            addContentStack(to: mainStack, title1: "Soft Skills", title2: "Hard Skills", skills1: ["Creativity", "User Research", "Prototyping"], skills2: ["Photoshop", "Illustrator", "Sketch"])
-        case 2:
-            addContentStack(to: mainStack, title1: "Soft Skills", title2: "Hard Skills", skills1: ["Leadership", "Time Management", "Negotiation"], skills2: ["Agile", "Scrum", "Kanban"])
-        default:
-            break
-        }
+        addContentStack(to: mainStack, title1: "Soft Skills", title2: "Hard Skills", skills1: softSkill, skills2: hardSkill)
     }
     
     private func addTitleLabel(to stack: UIStackView) {
@@ -91,13 +94,13 @@ class SkillsContentViewController: UIViewController {
         stack.addArrangedSubview(titleLabel)
     }
     
-    private func addContentStack(to stack: UIStackView, title1: String, title2: String, skills1: [String], skills2: [String]) {
+    private func addContentStack(to stack: UIStackView, title1: String, title2: String, skills1: [Skill], skills2: [Skill]) {
         addHStack(to: stack, title: title1, skills: skills1, tag: 1)
         addSpacing(to: stack, height: 16)
         addHStack(to: stack, title: title2, skills: skills2, tag: 2)
     }
     
-    private func addHStack(to stack: UIStackView, title: String, skills: [String], tag: Int) {
+    private func addHStack(to stack: UIStackView, title: String, skills: [Skill], tag: Int) {
         let hStack = UIStackView()
         hStack.axis = .vertical
         hStack.distribution = .equalSpacing
@@ -130,8 +133,11 @@ class SkillsContentViewController: UIViewController {
 
         hStack.addArrangedSubview(headerStack)
 
-        for skill in skills {
-            let skillView = createSkillView(skillName: skill, borderColorName: "BTint200")
+        // Sort skills by createdAt in descending order and take the first 3
+        let latestSkills = skills.sorted { $0.createdAt > $1.createdAt }.prefix(3)
+
+        for skill in latestSkills {
+            let skillView = createSkillView(skillName: skill.name, borderColorName: "BTint200")
             hStack.addArrangedSubview(skillView)
         }
 
@@ -147,34 +153,19 @@ class SkillsContentViewController: UIViewController {
     
     @objc private func showMoreButtonTapped(_ sender: UIButton) {
         let skillCategory: String
-        
+
         switch sender.tag {
         case 1:
-            skillCategory = "Soft"
+            skillCategory = "softskill"
         case 2:
-            skillCategory = "Hard"
+            skillCategory = "hardskill"
         default:
             return
         }
         
         let detailSkillVC = DetailSkillViewController()
         detailSkillVC.skillCategory = skillCategory
-        
-        // Pass the appropriate skill array based on the category
-        if skillCategory == "soft" {
-            detailSkillVC.skills = [
-                Skill(name: "Communication", role: "coder", type: "soft"),
-                Skill(name: "Critical Thinking", role: "coder", type: "soft"),
-                Skill(name: "Public Speaking", role: "coder", type: "soft")
-            ]
-        } else if skillCategory == "hard" {
-            detailSkillVC.skills = [
-                Skill(name: "SwiftUI", role: "coder", type: "hard"),
-                Skill(name: "UIKit", role: "coder", type: "hard"),
-                Skill(name: "MVVM", role: "coder", type: "hard")
-            ]
-        }
-        
+        detailSkillVC.selectedRole = selectedRole  // Pass the selected role
         navigationController?.pushViewController(detailSkillVC, animated: true)
     }
     

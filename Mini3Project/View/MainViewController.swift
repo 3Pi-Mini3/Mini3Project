@@ -130,7 +130,7 @@ class MainViewController: UIViewController {
                     .map { $0.replacingOccurrences(of: "-", with: "").trimmingCharacters(in: .whitespacesAndNewlines) }
                 print("Separated Hard Skills: \(separatedHardSkills)")
                 
-                let diagnoseRoleSkills = try await aiService.generateOneResponse(for: "\(separatedHardSkills) just declare the type of skills from above skills without any description, is it coding, design, or product with template [Skills:Type of skill]")
+                let diagnoseRoleSkills = try await aiService.generateOneResponse(for: "\(separatedHardSkills) from these skills,  specifying the skills with a role (coding, design, or product) it is associated with. Just list the skills and role without further explanation for example UI/UX design: design, etc")
                 print("Diagnose Raw Role Skills: \n \(diagnoseRoleSkills)")
                 
                 let rawSoftSkills = try await aiService.generateOneResponse(for: "Please list only the soft skills or personal qualities mentioned in this reflection. Do not include any technical or design-related skills. Provide the list as plain text without bullet points or extra descriptions: \(answersText)")

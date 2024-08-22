@@ -8,8 +8,10 @@
 import UIKit
 
 class DetailSkillViewController: UIViewController {
-    var skills: [Skill]?
     var skillCategory: String?
+    var selectedRole: String?  // Add this property to store the selected role
+
+    private let skillsViewModel = SkillsViewModel()
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -21,44 +23,51 @@ class DetailSkillViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        setupScrollView()
         setupSkillsSection()
+        loadSkills()
     }
     
     private func setupView() {
         view.backgroundColor = .systemBackground
-        title = "\(skillCategory ?? "") Skills"
+        title = "\(skillCategory?.capitalized ?? "")"
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        scrollView.addSubview(contentView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+    }
+    
     private func setupSkillsSection() {
+        contentView.addSubview(skillsContainer)
+        
         skillsContainer.axis = .vertical
         skillsContainer.spacing = 8
         skillsContainer.translatesAutoresizingMaskIntoConstraints = false
-        
-        skillsTitleLabel.attributedText = NSAttributedString(
-            string: "\(skillCategory ?? "") Skills",
-            attributes: TypographyRegular.headline
-        )
-        skillsTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         skillsList.axis = .vertical
         skillsList.spacing = 8
         skillsList.translatesAutoresizingMaskIntoConstraints = false
         
-        if let skills = skills {
-            let filteredSkills = skills
-                .filter { $0.type == skillCategory?.lowercased() }
-                .map { $0.name }
-            
-            for skill in filteredSkills {
-                let skillView = createSkillView(skillName: skill, borderColorName: "BTint200")
-                skillsList.addArrangedSubview(skillView)
-            }
-        }
-        
         skillsContainer.addArrangedSubview(skillsTitleLabel)
         skillsContainer.addArrangedSubview(skillsList)
-        contentView.addSubview(skillsContainer)
         
         NSLayoutConstraint.activate([
             skillsContainer.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
@@ -68,6 +77,30 @@ class DetailSkillViewController: UIViewController {
         ])
     }
     
+    private func loadSkills() {
+        guard let category = skillCategory else { return }
+        guard let role = selectedRole else { return }
+        
+        print(role)
+
+        // Fetch skills based on the category and role
+        var filteredSkills: [Skill]
+        
+        if category.lowercased() == "softskill" {
+            // Fetch all soft skills without filtering by role
+            filteredSkills = skillsViewModel.fetchSkills(forRole: "softskill").filter { $0.type == "softskill" }
+        } else {
+            // Fetch hard skills filtered by the role
+            filteredSkills = skillsViewModel.fetchSkills(forRole: role).filter { $0.type == "hardskill" }
+        }
+        
+        // Update the UI with the fetched skills
+        for skill in filteredSkills {
+            let skillView = createSkillView(skillName: skill.name, borderColorName: "BTint200")
+            skillsList.addArrangedSubview(skillView)
+        }
+    }
+
     private func createSkillView(skillName: String, borderColorName: String) -> UIView {
         let skillView = UIView()
         if let borderColor = UIColor(named: borderColorName)?.cgColor {

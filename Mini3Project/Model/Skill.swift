@@ -14,14 +14,15 @@ class Skill {
     var name: String
     var role: String
     var type: String
-    
+    var createdAt: Date
     @Relationship var reflection: Reflection?
     
-    init(id: String? = nil, name: String, role: String, type: String, reflection: Reflection? = nil) {
+    init(id: String? = nil, name: String, role: String, type: String, createdAt: Date = Date(), reflection: Reflection? = nil) {
         self.id = id
         self.name = name
         self.role = role
         self.type = type
         self.reflection = reflection
+        self.createdAt = createdAt
     }
 }
