@@ -110,7 +110,6 @@ class MainViewController: UIViewController {
               let answer2 = answerTextField2.text, !answer2.isEmpty,
               let answer3 = answerTextField3.text, !answer3.isEmpty,
               let answer4 = answerTextField4.text, !answer4.isEmpty else {
-            // Handle empty input
             showAlert(title: "Input Error", message: "Please fill in the topic and all answers.")
             return
         }
@@ -124,24 +123,28 @@ class MainViewController: UIViewController {
                 
                 let summary = try await aiService.generateOneResponse(for: "Only me a summary in one paragraph with list of hardskill and softskill that I learned from this reflection: \(answersText)")
                 
-                let rawHardSkills = try await aiService.generateOneResponse(for: "\(answersText) \n Only show response a list of hard skills without soft skills and only text without bulleted list from above reflection without any description from the list of skill")
-                // Example skills generation (this could be improved by the AI as well)
+                let rawHardSkills = try await aiService.generateOneResponse(for: "Please list only the technical or design-related skills mentioned in this reflection. Do not include any soft skills or personal qualities. Provide the list as plain text without bullet points or extra descriptions: \(answersText)")
+                
                 let separatedHardSkills = rawHardSkills
                     .components(separatedBy: "\n")
                     .map { $0.replacingOccurrences(of: "-", with: "").trimmingCharacters(in: .whitespacesAndNewlines) }
-
-
-                let rawSoftSkills = try await aiService.generateOneResponse(for: "\(answersText) Only show response a list of soft skills without hard skills and only text without bulleted list from above reflection without any description from the list of skill")
-                print(rawSoftSkills)
+                print("Separated Hard Skills: \(separatedHardSkills)")
+                
+                let diagnoseRoleSkills = try await aiService.generateOneResponse(for: "\(separatedHardSkills) just declare the type of skills from above skills without any description, is it coding, design, or product with template [Skills:Type of skill]")
+                print("Diagnose Raw Role Skills: \n \(diagnoseRoleSkills)")
+                
+                let rawSoftSkills = try await aiService.generateOneResponse(for: "Please list only the soft skills or personal qualities mentioned in this reflection. Do not include any technical or design-related skills. Provide the list as plain text without bullet points or extra descriptions: \(answersText)")
+                print("Softskills: \n \(rawSoftSkills)")
                 
                 let separatedSoftSkills = rawSoftSkills
                     .components(separatedBy: "\n")
                     .map { $0.replacingOccurrences(of: "-", with: "").trimmingCharacters(in: .whitespacesAndNewlines) }
-                print(rawSoftSkills)
-                print(separatedHardSkills)
-                print(separatedSoftSkills)
                 
-                viewModel.createReflection(topic: topic, answers: answers, hardSkills: separatedHardSkills, softSkills: separatedSoftSkills, summary: summary)
+                let skillsWithRoles = parseSkillsWithRoles(from: diagnoseRoleSkills)
+                
+                print(skillsWithRoles)
+                
+                viewModel.createReflection(topic: topic, answers: answers, hardSkillsWithRoles: skillsWithRoles, softSkills: separatedSoftSkills, summary: summary)
                 
                 showAlert(title: "Success", message: "Reflection saved with summary: \(summary)")
                 
@@ -149,6 +152,32 @@ class MainViewController: UIViewController {
                 showAlert(title: "Error", message: "Failed to generate summary: \(error.localizedDescription)")
             }
         }
+    }
+
+
+    private func parseSkillsWithRoles(from response: String) -> [(skill: String, role: String)] {
+        var skillsWithRoles: [(skill: String, role: String)] = []
+        
+        // Remove the "Skills:" prefix if it exists
+        var cleanedResponse = response.replacingOccurrences(of: "Skills:\n", with: "")
+        
+        // Remove the bullet points and trim whitespace
+        cleanedResponse = cleanedResponse.replacingOccurrences(of: "-", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Split the response into lines
+        let lines = cleanedResponse.components(separatedBy: "\n")
+        
+        for line in lines {
+            // Split each line by the colon to separate skill and role
+            let components = line.components(separatedBy: ":")
+            if components.count == 2 {
+                let skill = components[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                let role = components[1].trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                skillsWithRoles.append((skill: skill, role: role))
+            }
+        }
+        
+        return skillsWithRoles
     }
     
     private func showAlert(title: String, message: String) {

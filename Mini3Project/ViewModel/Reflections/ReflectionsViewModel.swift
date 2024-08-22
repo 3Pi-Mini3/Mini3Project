@@ -24,7 +24,7 @@ class ReflectionsViewModel {
         skills = (try? container?.mainContext.fetch(skillDescriptor)) ?? []
     }
     
-    func createReflection(topic: String, answers: [String], hardSkills: [String], softSkills: [String], summary: String) {
+    func createReflection(topic: String, answers: [String], hardSkillsWithRoles: [(skill: String, role: String)], softSkills: [String], summary: String) {
         guard let context = container?.mainContext else {
             print("Error: Main context is nil")
             return
@@ -34,13 +34,13 @@ class ReflectionsViewModel {
         
         context.insert(newReflection)
         
-        for skillName in hardSkills {
-            let skill = Skill(name: skillName, role: "tech", type: "hardskill", reflection: newReflection)
+        for (skillName, role) in hardSkillsWithRoles {
+            let skill = Skill(name: skillName, role: role, type: "hardskill", reflection: newReflection)
             context.insert(skill)
         }
         
         for skillName in softSkills {
-            let skill = Skill(name: skillName, role: "tech", type: "softskill", reflection: newReflection)
+            let skill = Skill(name: skillName, role: "softskill", type: "softskill", reflection: newReflection)
             context.insert(skill)
         }
         
