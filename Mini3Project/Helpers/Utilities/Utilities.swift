@@ -8,7 +8,7 @@
 import Foundation
 
 struct Utilities {
-    static func getReflectionSkillsName(from reflection: Reflection, filteringBy skillType: String? = nil) -> [String] {
+    static func getReflectionSkillsName(reflection: Reflection, skillType: String? = nil) -> [String] {
         guard let skills = reflection.skill else {
             return []
         }
@@ -24,7 +24,7 @@ struct Utilities {
     //        return reflection.summary
     //    }
     
-    static func getDateFormatted(from date: Date, format: String) -> String {
+    static func getDateFormatted(date: Date, format: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         

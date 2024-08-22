@@ -113,7 +113,7 @@ class ReflectionsViewController: UIViewController {
         dateView.addGestureRecognizer(tapGesture)
         
         dateLabel.attributedText = NSAttributedString(
-            string:  Utilities.getDateFormatted(from: Date(), format: "MMMM, yyyy"),
+            string:  Utilities.getDateFormatted(date: Date(), format: "MMMM, yyyy"),
             attributes: TypographyRegular.headline
         )
         dateLabel.textColor = UIColor(named: "MascotWhite")
@@ -238,7 +238,7 @@ class ReflectionsViewController: UIViewController {
         viewModel.$date
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newDate in
-                self?.dateLabel.text = Utilities.getDateFormatted(from: newDate, format: "MMMM, yyyy")
+                self?.dateLabel.text = Utilities.getDateFormatted(date: newDate, format: "MMMM, yyyy")
                 self?.updateReflections()
             }
             .store(in: &cancellables)

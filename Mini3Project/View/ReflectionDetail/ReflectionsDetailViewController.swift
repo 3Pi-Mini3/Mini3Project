@@ -83,7 +83,7 @@ class ReflectionDetailViewController: UIViewController {
         softSkillsList.spacing = 8
         softSkillsList.translatesAutoresizingMaskIntoConstraints = false
         
-        let softSkills = Utilities.getReflectionSkillsName(from: viewModel.getReflection(), filteringBy: "softskill")
+        let softSkills = Utilities.getReflectionSkillsName(reflection: viewModel.getReflection(), skillType: "softskill")
         if softSkills.isEmpty {
             let textLabel = UILabel()
             textLabel.text = "You did not get any soft skills."
@@ -121,7 +121,7 @@ class ReflectionDetailViewController: UIViewController {
         hardSkillsList.spacing = 8
         hardSkillsList.translatesAutoresizingMaskIntoConstraints = false
         
-        let hardSkills = Utilities.getReflectionSkillsName(from: viewModel.getReflection(), filteringBy: "hardskill")
+        let hardSkills = Utilities.getReflectionSkillsName(reflection: viewModel.getReflection(), skillType: "hardskill")
         if hardSkills.isEmpty {
             let textLabel = UILabel()
             textLabel.text = "You did not get any hard skills."

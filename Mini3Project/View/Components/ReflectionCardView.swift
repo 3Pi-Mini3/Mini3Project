@@ -28,7 +28,7 @@ class ReflectionCardView: UIView {
         reflectionTopicLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let softSkillsText: String
-        let softSkills = Utilities.getReflectionSkillsName(from: reflection, filteringBy: "softskill")
+        let softSkills = Utilities.getReflectionSkillsName(reflection: reflection, skillType: "softskill")
         if softSkills.isEmpty {
             softSkillsText = "Soft skills: -"
         } else {
@@ -42,7 +42,7 @@ class ReflectionCardView: UIView {
         reflectionSoftSkillsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let hardSkillsText: String
-        let hardSkills = Utilities.getReflectionSkillsName(from: reflection, filteringBy: "hardskill")
+        let hardSkills = Utilities.getReflectionSkillsName(reflection: reflection, skillType: "hardskill")
         if hardSkills.isEmpty {
             hardSkillsText = "Hard skills: -"
         } else {
@@ -59,7 +59,7 @@ class ReflectionCardView: UIView {
         horizontalLineView.translatesAutoresizingMaskIntoConstraints = false
         
         reflectionDateLabel.attributedText = NSAttributedString(
-            string: Utilities.getDateFormatted(from: reflection.createdAt, format: "dd MMMM yyyy"),
+            string: Utilities.getDateFormatted(date: reflection.createdAt, format: "dd MMMM yyyy"),
             attributes: TypographyRegular.caption1
         )
         reflectionDateLabel.translatesAutoresizingMaskIntoConstraints = false
