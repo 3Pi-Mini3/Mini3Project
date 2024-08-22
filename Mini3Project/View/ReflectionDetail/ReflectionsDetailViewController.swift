@@ -162,7 +162,7 @@ class ReflectionDetailViewController: UIViewController {
         summaryTextContainer.translatesAutoresizingMaskIntoConstraints = false
         
         summaryTextLabel.attributedText = NSAttributedString(
-            string: reflection?.summary ?? "Summary is Empty",
+            string: Utilities.getReflectionSummary(reflection: viewModel.getReflection()),
             attributes: TypographyRegular.body
         )
         summaryTextLabel.numberOfLines = 0

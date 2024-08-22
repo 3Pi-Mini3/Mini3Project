@@ -31,7 +31,6 @@ class ReflectionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //        viewModel.generateData()
         viewModel.loadData()
         
         setupView()

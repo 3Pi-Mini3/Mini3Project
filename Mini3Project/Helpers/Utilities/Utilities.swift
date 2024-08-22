@@ -20,9 +20,9 @@ struct Utilities {
         }
     }
     
-    //    static func getReflectionSummary(from reflection: Reflection) -> String {
-    //        return reflection.summary
-    //    }
+    static func getReflectionSummary(reflection: Reflection) -> String {
+        return reflection.summary
+    }
     
     static func getDateFormatted(date: Date, format: String) -> String {
         let dateFormatter = DateFormatter()
