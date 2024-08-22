@@ -30,10 +30,7 @@ class ReflectionsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        viewModel.loadData()
-        print(viewModel.reflections)
-        
+                
         setupView()
         setupHeaderView()
         setupReflectionsView()
@@ -41,6 +38,12 @@ class ReflectionsViewController: UIViewController {
         setupDateLabel()
         setupReflections()
         bindViewModel()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.loadData()
+        updateReflections()
     }
     
     private func setupView() {
@@ -177,6 +180,8 @@ class ReflectionsViewController: UIViewController {
     }
     
     private func updateReflections() {
+        viewModel.loadData()
+        
         reflectionsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
         viewModel.filterReflectionsByMonthAndYear()
@@ -188,10 +193,10 @@ class ReflectionsViewController: UIViewController {
         } else {
             for reflection in viewModel.filteredReflections {
                 let reflectionCardView = ReflectionCardView(reflection: reflection)
-                
+                                
                 let tapGesture = UITapGestureRecognizer(target: self, action: #selector(goToReflectionDetail(_:)))
                 reflectionCardView.addGestureRecognizer(tapGesture)
-                
+                                
                 reflectionsStack.addArrangedSubview(reflectionCardView)
                 
                 NSLayoutConstraint.activate([
@@ -239,14 +244,6 @@ class ReflectionsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newDate in
                 self?.dateLabel.text = Utilities.getDateFormatted(date: newDate, format: "MMMM, yyyy")
-                self?.updateReflections()
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$reflections
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.viewModel.loadData()
                 self?.updateReflections()
             }
             .store(in: &cancellables)
