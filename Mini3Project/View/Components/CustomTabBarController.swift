@@ -110,9 +110,21 @@ class CustomTabBarController: UITabBarController {
 
 
     @objc func middleButtonTapped() {
-        let alert = UIAlertController(title: "Middle Button", message: "Middle button tapped!", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
+        let chatVC = MainViewController()
+        chatVC.title = "Chat"
+        
+        let navController = UINavigationController(rootViewController: chatVC)
+        navController.modalPresentationStyle = .fullScreen
+        
+        // Customize the back button if needed
+        let backButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(dismissChatViewController))
+        chatVC.navigationItem.leftBarButtonItem = backButton
+
+        present(navController, animated: true, completion: nil)
+    }
+
+    @objc func dismissChatViewController() {
+        dismiss(animated: true, completion: nil)
     }
 
     override func viewDidLayoutSubviews() {

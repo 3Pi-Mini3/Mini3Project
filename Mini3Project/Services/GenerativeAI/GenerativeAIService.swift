@@ -35,6 +35,16 @@ class GenerativeAIService {
         return "No response generated."
     }
     
+    func generateOneResponse(for prompt: String) async throws -> String {
+        let response = try await model.generateContent(prompt)
+        
+        if let text = response.text {
+            return text
+        }
+        
+        return "No response generated."
+    }
+    
     func resetConversation() {
         conversationHistory.removeAll()
     }
