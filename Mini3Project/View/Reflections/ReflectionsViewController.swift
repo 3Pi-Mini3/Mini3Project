@@ -204,6 +204,16 @@ class ReflectionsViewController: UIViewController {
                     reflectionCardView.trailingAnchor.constraint(equalTo: reflectionsStack.trailingAnchor)
                 ])
             }
+            
+            let spacerView = UIView()
+            
+            reflectionsStack.addArrangedSubview(spacerView)
+            
+            NSLayoutConstraint.activate([
+                spacerView.leadingAnchor.constraint(equalTo: reflectionsStack.leadingAnchor),
+                spacerView.trailingAnchor.constraint(equalTo: reflectionsStack.trailingAnchor),
+                spacerView.heightAnchor.constraint(equalToConstant: 32)
+            ])
         }
     }
     
