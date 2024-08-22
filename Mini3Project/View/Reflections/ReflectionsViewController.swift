@@ -32,6 +32,7 @@ class ReflectionsViewController: UIViewController {
         super.viewDidLoad()
         
         viewModel.loadData()
+        print(viewModel.reflections)
         
         setupView()
         setupHeaderView()
@@ -238,6 +239,14 @@ class ReflectionsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] newDate in
                 self?.dateLabel.text = Utilities.getDateFormatted(date: newDate, format: "MMMM, yyyy")
+                self?.updateReflections()
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$reflections
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.viewModel.loadData()
                 self?.updateReflections()
             }
             .store(in: &cancellables)

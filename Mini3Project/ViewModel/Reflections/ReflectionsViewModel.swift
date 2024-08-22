@@ -17,7 +17,7 @@ class ReflectionsViewModel {
     
     func loadData() {
         let reflectionDescriptor = FetchDescriptor<Reflection>(
-            sortBy: [SortDescriptor(\Reflection.createdAt, order: .forward)]
+            sortBy: [SortDescriptor(\Reflection.createdAt, order: .reverse)]
         )
         let skillDescriptor = FetchDescriptor<Skill>()
         reflections = (try? container?.mainContext.fetch(reflectionDescriptor)) ?? []
