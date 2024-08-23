@@ -76,12 +76,12 @@ class BridgeNextViewController: UIViewController {
 
 private extension BridgeNextViewController {
     @objc func nextButtonTapped() {
-//        let vc = ProjectTitleInputViewController()
-//        
-//        let navController = UINavigationController(rootViewController: vc)
-//        navController.modalPresentationStyle = .fullScreen
-//
-//        present(navController, animated: true, completion: nil)
+        let vc = CustomTabBarController()
+        
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .fullScreen
+
+        present(navController, animated: true, completion: nil)
     }
 }
 
