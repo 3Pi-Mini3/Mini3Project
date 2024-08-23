@@ -38,6 +38,8 @@ class SkillsViewController: UIViewController {
     
     let skillsContentViewController = SkillsContentViewController()
     
+    private let viewModel = SkillsViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -55,8 +57,11 @@ class SkillsViewController: UIViewController {
         setupSegmentedControl()
         setupContentViewController()
         
-        // Add this line to load the initial content
-        skillsContentViewController.updateContent(forSegment: segmentedControl.selectedSegmentIndex)
+        let selectedRole = getRole(forSegmentIndex: segmentedControl.selectedSegmentIndex)
+        skillsContentViewController.selectedRole = selectedRole
+        let softSkill = viewModel.fetchSkills(forRole: "softskill", skillType: "softskill")
+        let hardSkill = viewModel.fetchSkills(forRole: selectedRole, skillType: "hardSkill")
+        skillsContentViewController.updateContent(forRole: selectedRole, softSkill: softSkill, hardSkill: hardSkill)
         
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
     }
@@ -113,8 +118,25 @@ class SkillsViewController: UIViewController {
         skillsContentViewController.didMove(toParent: self)
     }
     
+    func getRole(forSegmentIndex index: Int) -> String {
+        switch index {
+        case 0:
+            return "coding"
+        case 1:
+            return "design"
+        case 2:
+            return "product"
+        default:
+            return "nil"
+        }
+    }
+    
     @objc func segmentChanged(_ sender: UISegmentedControl) {
-        skillsContentViewController.updateContent(forSegment: sender.selectedSegmentIndex)
+        let selectedRole = getRole(forSegmentIndex: sender.selectedSegmentIndex)
+        let softSkill = viewModel.fetchSkills(forRole: "softskill", skillType: "softskill")
+        let hardSkill = viewModel.fetchSkills(forRole: selectedRole, skillType: "hardSkill")
+        skillsContentViewController.updateContent(forRole: selectedRole, softSkill: softSkill, hardSkill: hardSkill)
+        skillsContentViewController.selectedRole = selectedRole
     }
     
     override func viewDidLayoutSubviews() {
