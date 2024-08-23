@@ -19,6 +19,32 @@ class ReflectionDetailViewController: UIViewController {
     private lazy var summaryTextContainer: UIView = UIView()
     private lazy var summaryTextLabel: UILabel = UILabel()
     
+    private lazy var redirectButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor(named: "BTint100")
+        button.layer.cornerRadius = 10
+        
+        let titleColor = UIColor(named: "Text")!
+        
+        let attributedText = NSAttributedString(
+            string: "Back to skills page",
+            attributes: TypographyEmphasized.body.merging([
+                .foregroundColor: titleColor
+            ]) { (current, _) in current }
+        )
+        button.setAttributedTitle(attributedText, for: .normal)
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.layer.shadowColor = UIColor(named: "BGalert82")?.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 4)
+        button.layer.shadowOpacity = 0.5
+        button.layer.shadowRadius = 4
+        button.layer.masksToBounds = false
+        
+        return button
+    }()
+    
     init(viewModel: ReflectionDetailViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)

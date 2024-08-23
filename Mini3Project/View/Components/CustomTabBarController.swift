@@ -110,15 +110,14 @@ class CustomTabBarController: UITabBarController {
 
 
     @objc func middleButtonTapped() {
-        let chatVC = MainViewController()
-        chatVC.title = "Chat"
+        let vc = BridgeChatViewController()
         
-        let navController = UINavigationController(rootViewController: chatVC)
+        let navController = UINavigationController(rootViewController: vc)
         navController.modalPresentationStyle = .fullScreen
         
         // Customize the back button if needed
-        let backButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(dismissChatViewController))
-        chatVC.navigationItem.leftBarButtonItem = backButton
+        let backButton = UIBarButtonItem(title: "Skills", style: .plain, target: self, action: #selector(dismissChatViewController))
+        vc.navigationItem.leftBarButtonItem = backButton
 
         present(navController, animated: true, completion: nil)
     }

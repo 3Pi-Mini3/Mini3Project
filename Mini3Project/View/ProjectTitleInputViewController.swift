@@ -43,12 +43,12 @@ private extension ProjectTitleInputViewController {
     }
     
     @objc private func nextButtonTapped() {
-        projectName = textField.text
-        UserDefaults.standard.set(projectName, forKey: "projectName")
-        print("Project name saved: \(projectName ?? "No name")")
+        let vc = ReflectionChatViewController()
         
-        let reflectionChatView = ReflectionChatViewController()
-        navigationController?.pushViewController(reflectionChatView, animated: false)
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .fullScreen
+
+        present(navController, animated: false, completion: nil)
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {

@@ -217,12 +217,34 @@ private extension ReflectionChatViewController {
                 showNextPhaseButton()
             } else {
                 print("All phases completed")
+                self.view.endEditing(true)
+                
+                let vc = BridgeNextViewController()
+                
+                let navController = UINavigationController(rootViewController: vc)
+                navController.modalPresentationStyle = .fullScreen
+
+                present(navController, animated: true, completion: nil)
+                
                 print("Reflections :\n\(viewModel.reflections)")
             }
         }
     }
     
     @objc private func nextPhaseButtonTapped() {
+        let vc = BridgeGateViewController()
+        
+        vc.updateContent(
+            imageName: BridgeGate.imageNames[viewModel.currentPhaseIndex - 1], 
+            titleText: BridgeGate.titles[viewModel.currentPhaseIndex - 1], 
+            subTitleText: BridgeGate.descriptions[viewModel.currentPhaseIndex - 1]
+        )
+        
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .fullScreen
+
+        present(navController, animated: true, completion: nil)
+        
         chatView.subviews.forEach { $0.removeFromSuperview() }
         
         resetInputViewConstraints()
@@ -232,7 +254,9 @@ private extension ReflectionChatViewController {
         
         self.view.endEditing(true)
         
-        loadCurrentPhase()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
+            self.loadCurrentPhase()
+        }
     }
 }
 
@@ -406,34 +430,3 @@ private extension ReflectionChatViewController {
         ])
     }
 }
-
-//// PREVIEW
-//#if canImport(SwiftUI) && DEBUG
-//import SwiftUI
-//struct UIViewControllerPreview<ViewController: UIViewController>: UIViewControllerRepresentable {
-//    func updateUIViewController(_ uiViewController: ViewController, context: Context) {
-//        //
-//    }
-//    
-//    let viewController: ViewController
-//
-//    init(_ builder: @escaping () -> ViewController) {
-//        viewController = builder()
-//    }
-//
-//    // MARK: - UIViewControllerRepresentable
-//    func makeUIViewController(context: Context) -> ViewController {
-//        viewController
-//    }
-//}
-//#endif
-//
-//struct BestInClassPreviews_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UIViewControllerPreview {
-//            // Return whatever controller you want to preview
-//            let vc = ReflectionChatViewController() 
-//            return vc
-//        }
-//    }
-//}
