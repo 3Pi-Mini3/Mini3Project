@@ -8,9 +8,6 @@
 import UIKit
 
 class ProjectTitleInputViewController: UIViewController {
-    
-    private var projectName: String?
-    
     private var nextButtonBottomConstraint: NSLayoutConstraint?
     
     private lazy var titleView: UIView = createTitleView()
@@ -43,7 +40,10 @@ private extension ProjectTitleInputViewController {
     }
     
     @objc private func nextButtonTapped() {
+        let topic = textField.text
+        
         let vc = ReflectionChatViewController()
+        vc.topic = topic
         
         let navController = UINavigationController(rootViewController: vc)
         navController.modalPresentationStyle = .fullScreen

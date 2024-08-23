@@ -11,6 +11,8 @@ class ReflectionChatViewController: UIViewController {
     
     var viewModel = ReflectionChatViewModel()
     
+    var topic: String?
+    
     var bottomViewBottomConstraint: NSLayoutConstraint!
     private var confirmationViewBottomConstraint: NSLayoutConstraint?
     
@@ -34,6 +36,8 @@ class ReflectionChatViewController: UIViewController {
         
         let backButtonItem = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = backButtonItem
+        
+        viewModel.topic = self.topic!
         
         setupReflectionChatView()
         
@@ -216,8 +220,9 @@ private extension ReflectionChatViewController {
             if viewModel.currentPhaseIndex < viewModel.questions.count {
                 showNextPhaseButton()
             } else {
-                print("All phases completed")
                 self.view.endEditing(true)
+                
+                viewModel.generateSummaryAndSave()
                 
                 let vc = BridgeNextViewController()
                 
@@ -225,8 +230,6 @@ private extension ReflectionChatViewController {
                 navController.modalPresentationStyle = .fullScreen
 
                 present(navController, animated: true, completion: nil)
-                
-                print("Reflections :\n\(viewModel.reflections)")
             }
         }
     }
