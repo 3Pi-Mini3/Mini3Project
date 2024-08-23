@@ -28,7 +28,7 @@ class BridgeGateViewController: UIViewController {
     
     private lazy var descTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ready? Let's start reflecting!"
+        label.text = "-"
         label.textColor = .black
         label.numberOfLines = 0
 
@@ -53,7 +53,7 @@ class BridgeGateViewController: UIViewController {
     
     private lazy var descSubLabel: UILabel = {
         let label = UILabel()
-        label.text = "Try to respond seriously and attentively to discover and understand your strengths!"
+        label.text = "-"
         label.textColor = .black
         label.numberOfLines = 0
 
@@ -75,39 +75,41 @@ class BridgeGateViewController: UIViewController {
         return label
     }()
     
-    
-    
-    
-    
-    
-  
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupBrdigeGateView()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
+    func updateContent(imageName: String, titleText: String, subTitleText: String) {
+        imageView.image = UIImage(named: imageName)
+        
+        descTitleLabel.text = titleText
+        
+        descSubLabel.text = subTitleText
+    }
 }
-
-
 
 extension BridgeGateViewController {
     private func setupBrdigeGateView() {
         self.view.backgroundColor = .systemBackground
         
         self.view.addSubview(contentView)
-//        contentView.backgroundColor = .red
+        
         NSLayoutConstraint.activate([
             contentView.heightAnchor.constraint(equalToConstant: 488),
             
-            contentView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 119),
+            contentView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 75),
             contentView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 44),
             contentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -44),
         ])
         
         
         contentView.addSubview(imageView)
-//        imageView.backgroundColor = .systemPink
         
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: 391),
@@ -118,7 +120,7 @@ extension BridgeGateViewController {
            ])
         
         contentView.addSubview(descTitleLabel)
-//        descTitleLabel.backgroundColor = .cyan
+        
         NSLayoutConstraint.activate([
             descTitleLabel.heightAnchor.constraint(equalToConstant: 48),
             
@@ -129,7 +131,7 @@ extension BridgeGateViewController {
         
         
         contentView.addSubview(descSubLabel)
-//        descSubLabel.backgroundColor = .blue
+        
         NSLayoutConstraint.activate([
             descSubLabel.heightAnchor.constraint(equalToConstant: 36),
             
@@ -138,42 +140,37 @@ extension BridgeGateViewController {
             descSubLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
         ])
         
-        
-        
-        
-        
-        
     }
 }
 
 
 //preview
-#if canImport(SwiftUI) && DEBUG
-import SwiftUI
-struct UIViewControllerPreview<ViewController: UIViewController>: UIViewControllerRepresentable {
-    func updateUIViewController(_ uiViewController: ViewController, context: Context) {
-        //
-    }
-    
-    let viewController: ViewController
-
-    init(_ builder: @escaping () -> ViewController) {
-        viewController = builder()
-    }
-
-    // MARK: - UIViewControllerRepresentable
-    func makeUIViewController(context: Context) -> ViewController {
-        viewController
-    }
-}
-#endif
-
-struct BestInClassPreviews_Previews: PreviewProvider {
-    static var previews: some View {
-        UIViewControllerPreview {
-            // Return whatever controller you want to preview
-            let vc = BridgeGateViewController()
-            return vc
-        }
-    }
-}
+//#if canImport(SwiftUI) && DEBUG
+//import SwiftUI
+//struct UIViewControllerPreview<ViewController: UIViewController>: UIViewControllerRepresentable {
+//    func updateUIViewController(_ uiViewController: ViewController, context: Context) {
+//        //
+//    }
+//    
+//    let viewController: ViewController
+//
+//    init(_ builder: @escaping () -> ViewController) {
+//        viewController = builder()
+//    }
+//
+//    // MARK: - UIViewControllerRepresentable
+//    func makeUIViewController(context: Context) -> ViewController {
+//        viewController
+//    }
+//}
+//#endif
+//
+//struct BestInClassPreviews_Previews: PreviewProvider {
+//    static var previews: some View {
+//        UIViewControllerPreview {
+//            // Return whatever controller you want to preview
+//            let vc = BridgeGateViewController()
+//            return vc
+//        }
+//    }
+//}

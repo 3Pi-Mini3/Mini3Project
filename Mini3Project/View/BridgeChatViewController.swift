@@ -15,13 +15,6 @@ class BridgeChatViewController: UIViewController {
         return view
     }()
     
-//    private lazy var rectangleView: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = .gray
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
-    
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "4stages")
@@ -62,7 +55,6 @@ class BridgeChatViewController: UIViewController {
         label.text = "Let's make sure to do it correctly!"
         label.textColor = .black
         label.numberOfLines = 0
-
         
         let customParagraphStyle = NSMutableParagraphStyle()
         customParagraphStyle.alignment = .center
@@ -98,7 +90,6 @@ class BridgeChatViewController: UIViewController {
         label.textColor = .black
         label.numberOfLines = 0
 
-        
         let customParagraphStyle = NSMutableParagraphStyle()
         customParagraphStyle.alignment = .center
         
@@ -118,29 +109,26 @@ class BridgeChatViewController: UIViewController {
     
     
     private lazy var startButton: UIButton = {
-            let button = UIButton(type: .system)
-            button.backgroundColor = UIColor(named: "BTint100")
-            button.layer.cornerRadius = 10
-            
-            let titleColor = UIColor(named: "BGLight")
-            
-            let attributedText = NSAttributedString(
-                string: "Start exploration 􀄫",
-                attributes: TypographyEmphasized.body.merging([
-                    .foregroundColor: titleColor!
-                ]) { (current, _) in current }
-            )
-            button.setAttributedTitle(attributedText, for: .normal)
-            
-            button.addTarget(self, action: #selector(startExplorationButtonTapped), for: .touchUpInside)
-            
-            button.translatesAutoresizingMaskIntoConstraints = false
-            
-            return button
-        }()
-    
-  
-    
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor(named: "BTint100")
+        button.layer.cornerRadius = 10
+        
+        let titleColor = UIColor(named: "ContrastText")!
+        
+        let attributedText = NSAttributedString(
+            string: "Start exploration 􀄫",
+            attributes: TypographyEmphasized.body.merging([
+                .foregroundColor: titleColor
+            ]) { (current, _) in current }
+        )
+        button.setAttributedTitle(attributedText, for: .normal)
+        
+        button.addTarget(self, action: #selector(startExplorationButtonTapped), for: .touchUpInside)
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -149,9 +137,20 @@ class BridgeChatViewController: UIViewController {
     }
     
     @objc func startExplorationButtonTapped() {
-        let alert = UIAlertController(title: "Middle Button", message: "Middle button tapped!", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
+        let vc = ProjectTitleInputViewController()
+        
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .fullScreen
+        
+        // Customize the back button if needed
+        let backButton = UIBarButtonItem(title: "Skills", style: .plain, target: self, action: #selector(dismissChatViewController))
+        vc.navigationItem.leftBarButtonItem = backButton
+
+        present(navController, animated: true, completion: nil)
+    }
+    
+    @objc func dismissChatViewController() {
+        dismiss(animated: true, completion: nil)
     }
 
 }
@@ -161,7 +160,6 @@ extension BridgeChatViewController {
         self.view.backgroundColor = .systemBackground
         
         self.view.addSubview(contentView)
-//        contentView.backgroundColor = .red
         
         NSLayoutConstraint.activate([
             contentView.heightAnchor.constraint(equalToConstant: 562),
@@ -171,18 +169,7 @@ extension BridgeChatViewController {
             contentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -70),
         ])
         
-//        
-//        contentView.addSubview(rectangleView)
-//        NSLayoutConstraint.activate([
-//            rectangleView.heightAnchor.constraint(equalToConstant: 391),
-//            
-//            rectangleView.topAnchor.constraint(equalTo: contentView.topAnchor),
-//            rectangleView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
-//            rectangleView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
-//        ])
-        
         contentView.addSubview(imageView)
-//        imageView.backgroundColor = .systemPink
         
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: 282),
@@ -192,11 +179,8 @@ extension BridgeChatViewController {
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
            ])
         
-        
-        
-        
         contentView.addSubview(descTitleLabel)
-//        descTitleLabel.backgroundColor = .cyan
+        
         NSLayoutConstraint.activate([
             descTitleLabel.heightAnchor.constraint(equalToConstant: 48),
             
@@ -205,9 +189,8 @@ extension BridgeChatViewController {
             descTitleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
         ])
         
-        
         contentView.addSubview(descSubLabel)
-//        descSubLabel.backgroundColor = .blue
+        
         NSLayoutConstraint.activate([
             descSubLabel.heightAnchor.constraint(equalToConstant: 16),
             
@@ -216,10 +199,7 @@ extension BridgeChatViewController {
             descSubLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
         ])
         
-        
-        
         contentView.addSubview(durationView)
-//        durationView.backgroundColor = .systemPink
         
         NSLayoutConstraint.activate([
                durationView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -229,7 +209,7 @@ extension BridgeChatViewController {
            ])
         
         contentView.addSubview(descTimeLabel)
-//        descTimeLabel.backgroundColor = .blue
+        
         NSLayoutConstraint.activate([
             descTimeLabel.heightAnchor.constraint(equalToConstant: 16),
             
@@ -239,8 +219,8 @@ extension BridgeChatViewController {
         ])
         
         
-        contentView.addSubview(startButton)
-//        startButton.backgroundColor = .blue
+        self.view.addSubview(startButton)
+        
         NSLayoutConstraint.activate([
             startButton.heightAnchor.constraint(equalToConstant: 46),
             
@@ -248,41 +228,5 @@ extension BridgeChatViewController {
             startButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
             startButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
         ])
-        
-        
-        
-        
-        
     }
 }
-
-// PREVIEW
-//#if canImport(SwiftUI) && DEBUG
-//import SwiftUI
-//struct UIViewControllerPreview<ViewController: UIViewController>: UIViewControllerRepresentable {
-//    func updateUIViewController(_ uiViewController: ViewController, context: Context) {
-//        //
-//    }
-//    
-//    let viewController: ViewController
-//
-//    init(_ builder: @escaping () -> ViewController) {
-//        viewController = builder()
-//    }
-//
-//    // MARK: - UIViewControllerRepresentable
-//    func makeUIViewController(context: Context) -> ViewController {
-//        viewController
-//    }
-//}
-//#endif
-//
-//struct BestInClassPreviews_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UIViewControllerPreview {
-//            // Return whatever controller you want to preview
-//            let vc = BridgeChatViewController()
-//            return vc
-//        }
-//    }
-//}
