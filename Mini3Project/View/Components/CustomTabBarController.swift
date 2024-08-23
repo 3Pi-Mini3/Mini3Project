@@ -89,7 +89,7 @@ class CustomTabBarController: UITabBarController {
         
         let plusImage = UIImage(systemName: "plus")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))
         middleButton.setImage(plusImage, for: .normal)
-        middleButton.tintColor = UIColor(named: "YellowButton")
+        middleButton.tintColor = .white
 
         view.addSubview(middleButton)
 

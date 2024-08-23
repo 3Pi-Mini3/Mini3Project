@@ -16,10 +16,14 @@ class SkillsContentViewController: UIViewController {
     private var hardSkill: [Skill] = []
     private let skillsViewModel = SkillsViewModel()
     
-    var selectedRole: String = "" {
+    var selectedRole: String = "coding" {
         didSet {
             updateContent(forRole: selectedRole, softSkill: skillsViewModel.fetchSkills(forRole: "softskill", skillType: "softskill"), hardSkill: skillsViewModel.fetchSkills(forRole: selectedRole, skillType: "hardskill"))
         }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateContent(forRole: selectedRole, softSkill: skillsViewModel.fetchSkills(forRole: "softskill", skillType: "softskill"), hardSkill: skillsViewModel.fetchSkills(forRole: selectedRole, skillType: "hardskill"))
     }
     
     private let scrollView: UIScrollView = {
@@ -139,20 +143,24 @@ class SkillsContentViewController: UIViewController {
             placeholderStack.alignment = .center
             placeholderStack.spacing = 8
             placeholderStack.translatesAutoresizingMaskIntoConstraints = false
-            
-            let placeholderImageView = UIImageView(image: UIImage(named: "SittingBee"))
+
+            let placeholderImageView = UIImageView(image: UIImage(named: "MascotSad"))
             placeholderImageView.contentMode = .scaleAspectFit
             placeholderImageView.translatesAutoresizingMaskIntoConstraints = false
             
+            NSLayoutConstraint.activate([
+                placeholderImageView.heightAnchor.constraint(equalToConstant: 114)
+            ])
+
             let placeholderLabel = UILabel()
             placeholderLabel.text = "You don't have any skills yet"
             placeholderLabel.font = UIFont.systemFont(ofSize: 16)
             placeholderLabel.textColor = .gray
             placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
-            
+
             placeholderStack.addArrangedSubview(placeholderImageView)
             placeholderStack.addArrangedSubview(placeholderLabel)
-            
+
             hStack.addArrangedSubview(placeholderStack)
         } else {
             let latestSkills = skills.sorted { $0.createdAt > $1.createdAt }.prefix(3)

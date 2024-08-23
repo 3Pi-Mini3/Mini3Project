@@ -30,8 +30,19 @@ class DetailSkillViewController: UIViewController {
     
     private func setupView() {
         view.backgroundColor = .systemBackground
-        title = "\(skillCategory?.capitalized ?? "")"
+        title = formatCategoryName(skillCategory)
         navigationController?.navigationBar.prefersLargeTitles = true
+    }
+
+    private func formatCategoryName(_ category: String?) -> String {
+        switch category?.lowercased() {
+        case "softskill":
+            return "Soft Skill"
+        case "hardskill":
+            return "Hard Skill"
+        default:
+            return category?.capitalized ?? ""
+        }
     }
     
     private func setupScrollView() {
@@ -89,10 +100,26 @@ class DetailSkillViewController: UIViewController {
             filteredSkills = skillsViewModel.fetchSkills(forRole: role).filter { $0.type == "hardskill" }
         }
         
-        for skill in filteredSkills {
-            let skillView = createSkillView(skillName: skill.name, borderColorName: "BTint200")
-            skillsList.addArrangedSubview(skillView)
+        if filteredSkills.isEmpty {
+            showEmptyStateView()
+        } else {
+            for skill in filteredSkills {
+                let skillView = createSkillView(skillName: skill.name, borderColorName: "BTint200")
+                skillsList.addArrangedSubview(skillView)
+            }
         }
+    }
+
+    private func showEmptyStateView() {
+        let emptyStateView = EmptyStateView(imageName: "MascotSad", desc: "You don't have any skills yet.")
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(emptyStateView)
+        
+        NSLayoutConstraint.activate([
+            emptyStateView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            emptyStateView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            emptyStateView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.8),
+        ])
     }
 
     private func createSkillView(skillName: String, borderColorName: String) -> UIView {
@@ -135,3 +162,4 @@ class DetailSkillViewController: UIViewController {
         return skillView
     }
 }
+
