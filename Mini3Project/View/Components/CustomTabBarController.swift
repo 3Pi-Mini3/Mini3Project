@@ -85,11 +85,11 @@ class CustomTabBarController: UITabBarController {
     func setupMiddleButton() {
         middleButton.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
         middleButton.layer.cornerRadius = 40
-        middleButton.backgroundColor = UIColor(named: "Bluemarine")
+        middleButton.backgroundColor = UIColor(named: "BTint100")
         
         let plusImage = UIImage(systemName: "plus")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))
         middleButton.setImage(plusImage, for: .normal)
-        middleButton.tintColor = UIColor(named: "YellowButton")
+        middleButton.tintColor = .white
 
         view.addSubview(middleButton)
 

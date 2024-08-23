@@ -44,7 +44,6 @@ class SkillsViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Skills"
-        view.backgroundColor = .white
         
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always

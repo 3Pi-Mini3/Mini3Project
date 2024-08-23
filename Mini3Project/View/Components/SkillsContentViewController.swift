@@ -36,7 +36,7 @@ class SkillsContentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        
         setupScrollView()
     }
     

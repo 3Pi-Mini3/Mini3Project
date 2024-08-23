@@ -302,8 +302,12 @@ private extension ReflectionChatViewController {
         confirmationView.onExit = {
             self.confirmationView.dismissAlert()
             
-            let mainPage = CustomTabBarController()
-            self.navigationController?.pushViewController(mainPage, animated: false)
+            let vc = CustomTabBarController()
+            
+            let navController = UINavigationController(rootViewController: vc)
+            navController.modalPresentationStyle = .fullScreen
+
+            self.present(navController, animated: true, completion: nil)
         }
         
         confirmationView.presentAlert(in: self)

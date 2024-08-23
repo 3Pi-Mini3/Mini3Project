@@ -28,7 +28,7 @@ class BridgeChatViewController: UIViewController {
     private lazy var descTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "You will go through 4 stages to recognize your strengths!"
-        label.textColor = .black
+        label.textColor = UIColor(named: "Text")
         label.numberOfLines = 0
 
         let customParagraphStyle = NSMutableParagraphStyle()
@@ -53,7 +53,7 @@ class BridgeChatViewController: UIViewController {
     private lazy var descSubLabel: UILabel = {
         let label = UILabel()
         label.text = "Let's make sure to do it correctly!"
-        label.textColor = .black
+        label.textColor = UIColor(named: "Text")
         label.numberOfLines = 0
         
         let customParagraphStyle = NSMutableParagraphStyle()
@@ -87,7 +87,7 @@ class BridgeChatViewController: UIViewController {
     private lazy var descTimeLabel: UILabel = {
         let label = UILabel()
         label.text = "10 min"
-        label.textColor = .black
+        label.textColor = UIColor(named: "Text")
         label.numberOfLines = 0
 
         let customParagraphStyle = NSMutableParagraphStyle()
