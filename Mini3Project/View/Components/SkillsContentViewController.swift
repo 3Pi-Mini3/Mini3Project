@@ -132,13 +132,35 @@ class SkillsContentViewController: UIViewController {
         headerStack.addArrangedSubview(showMoreButton)
 
         hStack.addArrangedSubview(headerStack)
+        
+        if skills.isEmpty {
+            let placeholderStack = UIStackView()
+            placeholderStack.axis = .vertical
+            placeholderStack.alignment = .center
+            placeholderStack.spacing = 8
+            placeholderStack.translatesAutoresizingMaskIntoConstraints = false
+            
+            let placeholderImageView = UIImageView(image: UIImage(named: "SittingBee"))
+            placeholderImageView.contentMode = .scaleAspectFit
+            placeholderImageView.translatesAutoresizingMaskIntoConstraints = false
+            
+            let placeholderLabel = UILabel()
+            placeholderLabel.text = "You don't have any skills yet"
+            placeholderLabel.font = UIFont.systemFont(ofSize: 16)
+            placeholderLabel.textColor = .gray
+            placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
+            
+            placeholderStack.addArrangedSubview(placeholderImageView)
+            placeholderStack.addArrangedSubview(placeholderLabel)
+            
+            hStack.addArrangedSubview(placeholderStack)
+        } else {
+            let latestSkills = skills.sorted { $0.createdAt > $1.createdAt }.prefix(3)
 
-        // Sort skills by createdAt in descending order and take the first 3
-        let latestSkills = skills.sorted { $0.createdAt > $1.createdAt }.prefix(3)
-
-        for skill in latestSkills {
-            let skillView = createSkillView(skillName: skill.name, borderColorName: "BTint200")
-            hStack.addArrangedSubview(skillView)
+            for skill in latestSkills {
+                let skillView = createSkillView(skillName: skill.name, borderColorName: "BTint200")
+                hStack.addArrangedSubview(skillView)
+            }
         }
 
         stack.addArrangedSubview(hStack)

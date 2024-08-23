@@ -57,7 +57,6 @@ class SkillsViewController: UIViewController {
         setupSegmentedControl()
         setupContentViewController()
         
-        // Update content based on the initial selected segment
         let selectedRole = getRole(forSegmentIndex: segmentedControl.selectedSegmentIndex)
         skillsContentViewController.selectedRole = selectedRole
         let softSkill = viewModel.fetchSkills(forRole: "softskill", skillType: "softskill")

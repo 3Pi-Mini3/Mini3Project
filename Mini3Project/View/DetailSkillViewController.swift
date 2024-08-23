@@ -9,7 +9,7 @@ import UIKit
 
 class DetailSkillViewController: UIViewController {
     var skillCategory: String?
-    var selectedRole: String?  // Add this property to store the selected role
+    var selectedRole: String?
 
     private let skillsViewModel = SkillsViewModel()
     
@@ -81,20 +81,14 @@ class DetailSkillViewController: UIViewController {
         guard let category = skillCategory else { return }
         guard let role = selectedRole else { return }
         
-        print(role)
-
-        // Fetch skills based on the category and role
         var filteredSkills: [Skill]
         
         if category.lowercased() == "softskill" {
-            // Fetch all soft skills without filtering by role
             filteredSkills = skillsViewModel.fetchSkills(forRole: "softskill").filter { $0.type == "softskill" }
         } else {
-            // Fetch hard skills filtered by the role
             filteredSkills = skillsViewModel.fetchSkills(forRole: role).filter { $0.type == "hardskill" }
         }
         
-        // Update the UI with the fetched skills
         for skill in filteredSkills {
             let skillView = createSkillView(skillName: skill.name, borderColorName: "BTint200")
             skillsList.addArrangedSubview(skillView)
