@@ -227,8 +227,13 @@ class ReflectionsViewController: UIViewController {
         let reflection = viewModel.filteredReflections[index]
         
         let reflectionDetailViewModel = ReflectionDetailViewModel(reflection: reflection)
-        let reflectionDetailViewController = ReflectionDetailViewController(viewModel: reflectionDetailViewModel)
+        let reflectionDetailViewController = ReflectionDetailViewController(viewModel: reflectionDetailViewModel, showBackButton: false)
         reflectionDetailViewController.title = "Reflection Detail"
+        
+//        navigationController?.pushViewController(reflectionDetailViewController, animated: true)
+        let backButton = UIBarButtonItem()
+        backButton.title = "Skills"
+        navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         
         navigationController?.pushViewController(reflectionDetailViewController, animated: true)
     }

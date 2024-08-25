@@ -29,8 +29,6 @@ class ProjectTitleInputViewController: UIViewController {
         setupKeyboardObservers()
         
         dismissKB()
-        
-        customizeBackButtonAppearance()
     }
 }
 
@@ -42,13 +40,18 @@ private extension ProjectTitleInputViewController {
     @objc private func nextButtonTapped() {
         let topic = textField.text
         
-        let vc = ReflectionChatViewController()
-        vc.topic = topic
+        let vc = BridgeGateViewController(autoDismiss: false, topic: topic!)
+        
+        vc.updateContent(
+            imageName: "gate1", 
+            titleText: "Ready? Let's start reflecting!", 
+            subTitleText: "Try to respond seriously and attentively to discover and understand your strengths!"
+        )
         
         let navController = UINavigationController(rootViewController: vc)
         navController.modalPresentationStyle = .fullScreen
 
-        present(navController, animated: false, completion: nil)
+        present(navController, animated: true, completion: nil)
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {
@@ -74,13 +77,6 @@ private extension ProjectTitleInputViewController {
 }
 
 private extension ProjectTitleInputViewController {
-    private func customizeBackButtonAppearance() {
-        let backButton = UIBarButtonItem()
-        backButton.title = "Skills"
-        backButton.tintColor = UIColor(named: "BTint200")
-        
-        self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
-    }
     
     private func setupKeyboardObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -93,7 +89,7 @@ private extension ProjectTitleInputViewController {
         view.addGestureRecognizer(tapGesture)
     }
 }
-
+ 
 extension ProjectTitleInputViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textFieldView.layer.borderColor = UIColor(named: "Bluemarine")?.cgColor
@@ -118,7 +114,7 @@ extension ProjectTitleInputViewController: UITextFieldDelegate {
     }
     
     private func updateNextButtonState(isTextEmpty: Bool = true) {
-        let backgroundColor: UIColor = isTextEmpty ? UIColor(named: "BTint200")! : UIColor(named: "Bluemarine")!
+        let backgroundColor: UIColor = isTextEmpty ? UIColor(named: "BTint200")! : UIColor(named: "BTint100")!
         let titleColor: UIColor = isTextEmpty ? UIColor(named: "BTint300")! : UIColor(named: "BTint300")!
         
         nextButton.backgroundColor = backgroundColor

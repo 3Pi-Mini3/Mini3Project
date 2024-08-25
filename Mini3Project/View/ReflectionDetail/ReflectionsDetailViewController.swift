@@ -3,6 +3,8 @@ import UIKit
 class ReflectionDetailViewController: UIViewController {
     private var viewModel: ReflectionDetailViewModel
     
+    private var showBackButton: Bool
+    
     private lazy var scrollView = UIScrollView()
     private lazy var contentView = UIStackView()
     
@@ -19,12 +21,12 @@ class ReflectionDetailViewController: UIViewController {
     private lazy var summaryTextContainer: UIView = UIView()
     private lazy var summaryTextLabel: UILabel = UILabel()
     
-    private lazy var redirectButton: UIButton = {
+    private lazy var backButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor(named: "BTint100")
         button.layer.cornerRadius = 10
         
-        let titleColor = UIColor(named: "Text")!
+        let titleColor = UIColor.white
         
         let attributedText = NSAttributedString(
             string: "Back to skills page",
@@ -42,11 +44,14 @@ class ReflectionDetailViewController: UIViewController {
         button.layer.shadowRadius = 4
         button.layer.masksToBounds = false
         
+        button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        
         return button
     }()
     
-    init(viewModel: ReflectionDetailViewModel) {
+    init(viewModel: ReflectionDetailViewModel, showBackButton: Bool) {
         self.viewModel = viewModel
+        self.showBackButton = showBackButton
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -62,6 +67,13 @@ class ReflectionDetailViewController: UIViewController {
         setupSoftSkillsSection()
         setupHardSkillsSection()
         setupSummarySection()
+        
+        if showBackButton {
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            setupBackButton()
+        } else {
+            navigationController?.setNavigationBarHidden(false, animated: false)
+        }
     }
     
     private func setupView() {
@@ -83,13 +95,13 @@ class ReflectionDetailViewController: UIViewController {
         
         scrollView.addSubview(contentView)
         contentView.axis = .vertical
-        contentView.spacing = 24
+        contentView.spacing = 12
         contentView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
         ])
     }
@@ -210,5 +222,26 @@ class ReflectionDetailViewController: UIViewController {
             summaryTextLabel.trailingAnchor.constraint(equalTo: summaryTextContainer.trailingAnchor, constant: -16),
             summaryTextLabel.bottomAnchor.constraint(equalTo: summaryTextContainer.bottomAnchor, constant: -16)
         ])
+    }
+    
+    private func setupBackButton() {
+        contentView.addArrangedSubview(backButton)
+        
+        NSLayoutConstraint.activate([
+            backButton.heightAnchor.constraint(equalToConstant: 46),
+            
+            backButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            backButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+        ])
+    }
+    
+    @objc private func backButtonTapped() {
+        let vc = CustomTabBarController()
+        
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .fullScreen
+        navController.setNavigationBarHidden(true, animated: false)
+
+        present(navController, animated: true, completion: nil)
     }
 }

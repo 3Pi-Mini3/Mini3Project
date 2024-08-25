@@ -26,7 +26,7 @@ class SkillsListViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Skills List"
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         tableView.delegate = self
         tableView.dataSource = self

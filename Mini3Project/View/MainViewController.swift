@@ -144,7 +144,7 @@ class MainViewController: UIViewController {
                 
                 print(skillsWithRoles)
                 
-                viewModel.createReflection(topic: topic, answers: answers, hardSkillsWithRoles: skillsWithRoles, softSkills: separatedSoftSkills, summary: summary)
+                //viewModel.createReflection(topic: topic, answers: answers, hardSkillsWithRoles: skillsWithRoles, softSkills: separatedSoftSkills, summary: summary)
                 
                 showAlert(title: "Success", message: "Reflection saved with summary: \(summary)")
                 

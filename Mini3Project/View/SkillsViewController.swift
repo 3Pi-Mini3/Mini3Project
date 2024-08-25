@@ -17,10 +17,9 @@ import UIKit
 class SkillsViewController: UIViewController {
     private let headerView: UIView = UIView()
     private let imageView: UIImageView = UIImageView()
-    
     private let reflectionsView: UIView = UIView()
-    
     private let titleLabel: UILabel = UILabel()
+    
     // Segmented Control
     let segmentedControl: UISegmentedControl = {
         let items = ["Coder", "Design", "Product"]
@@ -30,44 +29,35 @@ class SkillsViewController: UIViewController {
         
         control.backgroundColor = UIColor(named: "BTint200")!.withAlphaComponent(0.3)
         control.selectedSegmentTintColor = UIColor(named: "BTint100")
-        control.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
+        control.setTitleTextAttributes([.foregroundColor: UIColor(named: "Text")!], for: .normal)
         control.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
         
         return control
     }()
     
     let skillsContentViewController = SkillsContentViewController()
-    
     private let viewModel = SkillsViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "Skills"
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
         
-        configureView()
         configureHeaderView()
-        configureRelfectionsView()
+        configureReflectionsView()
         configureTitleLabel()
-        
         setupSegmentedControl()
         setupContentViewController()
+        setupConstraints() // **Moved constraints setup to this method**
         
-        let selectedRole = getRole(forSegmentIndex: segmentedControl.selectedSegmentIndex)
-        skillsContentViewController.selectedRole = selectedRole
-        let softSkill = viewModel.fetchSkills(forRole: "softskill", skillType: "softskill")
-        let hardSkill = viewModel.fetchSkills(forRole: selectedRole, skillType: "hardSkill")
-        skillsContentViewController.updateContent(forRole: selectedRole, softSkill: softSkill, hardSkill: hardSkill)
+        // Initial setup
+        updateSkillsContent(forSegmentIndex: segmentedControl.selectedSegmentIndex)
         
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
-    }
-    
-    private func configureView() {
-        view.backgroundColor = .systemGray6
     }
     
     private func configureHeaderView() {
@@ -91,7 +81,7 @@ class SkillsViewController: UIViewController {
         ])
     }
     
-    private func configureRelfectionsView() {
+    private func configureReflectionsView() {
         reflectionsView.backgroundColor = .systemBackground
         reflectionsView.layer.cornerRadius = 50
         reflectionsView.layer.maskedCorners = [.layerMaxXMinYCorner]
@@ -108,40 +98,18 @@ class SkillsViewController: UIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    func setupSegmentedControl() {
+    private func setupSegmentedControl() {
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    func setupContentViewController() {
+    private func setupContentViewController() {
         addChild(skillsContentViewController)
         skillsContentViewController.view.translatesAutoresizingMaskIntoConstraints = false
         skillsContentViewController.didMove(toParent: self)
     }
     
-    func getRole(forSegmentIndex index: Int) -> String {
-        switch index {
-        case 0:
-            return "coding"
-        case 1:
-            return "design"
-        case 2:
-            return "product"
-        default:
-            return "nil"
-        }
-    }
-    
-    @objc func segmentChanged(_ sender: UISegmentedControl) {
-        let selectedRole = getRole(forSegmentIndex: sender.selectedSegmentIndex)
-        let softSkill = viewModel.fetchSkills(forRole: "softskill", skillType: "softskill")
-        let hardSkill = viewModel.fetchSkills(forRole: selectedRole, skillType: "hardSkill")
-        skillsContentViewController.updateContent(forRole: selectedRole, softSkill: softSkill, hardSkill: hardSkill)
-        skillsContentViewController.selectedRole = selectedRole
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
+    // **Added this method to setup constraints**
+    private func setupConstraints() {
         let stackView = UIStackView(arrangedSubviews: [
             headerView,
             titleLabel,
@@ -167,4 +135,31 @@ class SkillsViewController: UIViewController {
             stackView.bottomAnchor.constraint(equalTo: reflectionsView.bottomAnchor)
         ])
     }
+    
+    func getRole(forSegmentIndex index: Int) -> String {
+        switch index {
+        case 0:
+            return "coding"
+        case 1:
+            return "design"
+        case 2:
+            return "product"
+        default:
+            return "nil"
+        }
+    }
+    
+    @objc func segmentChanged(_ sender: UISegmentedControl) {
+        updateSkillsContent(forSegmentIndex: sender.selectedSegmentIndex) // **Refactored to use the new method**
+    }
+    
+    // **Added this method to handle skills content update**
+    private func updateSkillsContent(forSegmentIndex index: Int) {
+        let selectedRole = getRole(forSegmentIndex: index)
+        let softSkill = viewModel.fetchSkills(forRole: "softskill", skillType: "softskill")
+        let hardSkill = viewModel.fetchSkills(forRole: selectedRole, skillType: "hardSkill")
+        skillsContentViewController.updateContent(forRole: selectedRole, softSkill: softSkill, hardSkill: hardSkill)
+        skillsContentViewController.selectedRole = selectedRole
+    }
 }
+

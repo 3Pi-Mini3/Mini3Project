@@ -24,35 +24,6 @@ class ReflectionsViewModel {
         skills = (try? container?.mainContext.fetch(skillDescriptor)) ?? []
     }
     
-    func createReflection(topic: String, answers: [String], hardSkillsWithRoles: [(skill: String, role: String)], softSkills: [String], summary: String) {
-        guard let context = container?.mainContext else {
-            print("Error: Main context is nil")
-            return
-        }
-        
-        let newReflection = Reflection(topic: topic, answers: answers, summary: summary, createdAt: Date())
-        
-        context.insert(newReflection)
-        
-        for (skillName, role) in hardSkillsWithRoles {
-            let skill = Skill(name: skillName, role: role, type: "hardskill", reflection: newReflection)
-            context.insert(skill)
-        }
-        
-        for skillName in softSkills {
-            let skill = Skill(name: skillName, role: "softskill", type: "softskill", reflection: newReflection)
-            context.insert(skill)
-        }
-        
-        do {
-            try context.save()
-        } catch {
-            print("Failed to save new reflection and skills: \(error)")
-        }
-        
-        loadData()
-    }
-    
     func filterReflectionsByMonthAndYear() {
         let calendar = Calendar.current
         let targetComponents = calendar.dateComponents([.year, .month], from: date)

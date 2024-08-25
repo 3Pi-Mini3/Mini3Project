@@ -9,6 +9,8 @@ import UIKit
 
 class BridgeNextViewController: UIViewController {
     
+    private var bridgeNextViewModel = BridgeNextViewModel()
+    
     private lazy var contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -18,7 +20,7 @@ class BridgeNextViewController: UIViewController {
     private lazy var descLabel: UILabel = {
         let label = UILabel()
         label.text = "Wow you’re so amazing!!! Let’s see your achieved skills"
-        label.textColor = .black
+        label.textColor = UIColor(named: "Text")
         label.numberOfLines = 0
 
         let customParagraphStyle = NSMutableParagraphStyle()
@@ -44,7 +46,7 @@ class BridgeNextViewController: UIViewController {
         button.backgroundColor = UIColor(named: "BTint100")
         button.layer.cornerRadius = 10
         
-        let titleColor = UIColor(named: "ContrastText")!
+        let titleColor = UIColor.white
         
         let attributedText = NSAttributedString(
             string: "Back to skills page",
@@ -69,19 +71,41 @@ class BridgeNextViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleSaveCompleted), name: .saveCompletedNotification, object: nil)
 
         setupBridgeView()
+        
+        nextButton.alpha = 0.0
+        nextButton.isHidden = true
+    }
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 
 private extension BridgeNextViewController {
-    @objc func nextButtonTapped() {
-        let vc = CustomTabBarController()
+    @objc func handleSaveCompleted(notification: Notification) {
+        nextButton.isHidden = false
         
-        let navController = UINavigationController(rootViewController: vc)
-        navController.modalPresentationStyle = .fullScreen
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.nextButton.alpha = 1.0
+        }
+    }
 
-        present(navController, animated: true, completion: nil)
+    
+    @objc func nextButtonTapped() {
+        bridgeNextViewModel.getLatestReflection()
+        
+        let reflection = bridgeNextViewModel.latestReflection
+        
+        let reflectionDetailViewModel = ReflectionDetailViewModel(reflection: reflection!)
+        let reflectionDetailViewController = ReflectionDetailViewController(viewModel: reflectionDetailViewModel, showBackButton: true)
+        
+//        navigationController?.pushViewController(reflectionDetailViewController, animated: true)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        navigationController?.pushViewController(reflectionDetailViewController, animated: true)
     }
 }
 
@@ -128,36 +152,6 @@ private extension BridgeNextViewController {
             nextButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16)
         ])
         
+        //showNextButtonWithDelay()
     }
 }
-
-// PREVIEW
-//#if canImport(SwiftUI) && DEBUG
-//import SwiftUI
-//struct UIViewControllerPreview<ViewController: UIViewController>: UIViewControllerRepresentable {
-//    func updateUIViewController(_ uiViewController: ViewController, context: Context) {
-//        //
-//    }
-//    
-//    let viewController: ViewController
-//
-//    init(_ builder: @escaping () -> ViewController) {
-//        viewController = builder()
-//    }
-//
-//    // MARK: - UIViewControllerRepresentable
-//    func makeUIViewController(context: Context) -> ViewController {
-//        viewController
-//    }
-//}
-//#endif
-//
-//struct BestInClassPreviews_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UIViewControllerPreview {
-//            // Return whatever controller you want to preview
-//            let vc = BridgeNextViewController() 
-//            return vc
-//        }
-//    }
-//}
