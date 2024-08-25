@@ -26,4 +26,8 @@ class Reflection {
         self.createdAt = createdAt
         self.skill = skill
     }
+    
+    var description: String {
+            return "Topic: \(topic), Summary: \(summary)"
+    }
 }

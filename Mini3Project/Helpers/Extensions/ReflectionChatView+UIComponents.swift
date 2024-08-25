@@ -90,7 +90,7 @@ extension ReflectionChatViewController {
         button.backgroundColor = UIColor(named: "BTint100")
         button.layer.cornerRadius = 10
         
-        let titleColor = UIColor(named: "ContrastText")!
+        let titleColor = UIColor.white
         
         let attributedText = NSAttributedString(
             string: "Entry new gate",

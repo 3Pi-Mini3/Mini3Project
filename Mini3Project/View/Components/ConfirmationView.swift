@@ -45,7 +45,7 @@ class ConfirmationView: UIView {
         button.backgroundColor = UIColor(named: "BTint100")
         button.layer.cornerRadius = 10
         
-        let titleColor = UIColor(named: "ContrastText")!
+        let titleColor = UIColor.white
         
         let attributedText = NSAttributedString(
             string: "Continue",
@@ -167,41 +167,5 @@ private extension ConfirmationView {
     
     @objc private func exitTapped() {
         onExit?()
-    }
-}
-
-extension ConfirmationView {
-    func presentAlert(in viewController: UIViewController) {
-        viewController.view.addSubview(self)
-        
-        self.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Define constraints for initial (off-screen) and final positions
-        let bottomConstraint = self.bottomAnchor.constraint(equalTo: viewController.view.bottomAnchor, constant: 476) // Start off-screen
-        let leadingConstraint = self.leadingAnchor.constraint(equalTo: viewController.view.leadingAnchor)
-        let trailingConstraint = self.trailingAnchor.constraint(equalTo: viewController.view.trailingAnchor)
-        let heightConstraint = self.heightAnchor.constraint(equalToConstant: 476)
-        
-        NSLayoutConstraint.activate([leadingConstraint, trailingConstraint, bottomConstraint, heightConstraint])
-        
-        viewController.view.layoutIfNeeded()
-        
-        // Animate the view into position
-        UIView.animate(withDuration: 0.3, animations: {
-            bottomConstraint.constant = -15
-            viewController.view.layoutIfNeeded()
-        })
-    }
-        
-    
-    func dismissAlert() {
-        UIView.animate(withDuration: 0.3, animations: {
-            if let bottomConstraint = self.constraints.first(where: { $0.firstAttribute == .bottom }) {
-                bottomConstraint.constant = 476
-                self.superview?.layoutIfNeeded()
-            }
-        }) { _ in
-            self.removeFromSuperview()
-        }
     }
 }

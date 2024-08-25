@@ -27,6 +27,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window?.rootViewController = navigation
         
         window?.makeKeyAndVisible()
+        
+        checkFirstLaunch()
+    }
+    
+    func checkFirstLaunch() {
+        let hasLaunchedBefore = UserDefaults.standard.bool(forKey: "hasLaunchedBefore")
+        if !hasLaunchedBefore {
+            presentOnboardingViewController()
+            UserDefaults.standard.set(true, forKey: "hasLaunchedBefore")
+        }
+    }
+    
+    func presentOnboardingViewController() {
+        guard let rootViewController = window?.rootViewController else { return }
+
+        let onboardingVC = OnboardingViewController()
+        let navController = UINavigationController(rootViewController: onboardingVC)
+        navController.modalPresentationStyle = .overCurrentContext
+
+        rootViewController.present(navController, animated: false, completion: nil)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

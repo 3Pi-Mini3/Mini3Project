@@ -10,6 +10,9 @@ import SwiftUI
 
 class BridgeGateViewController: UIViewController {
     
+    private var autoDismiss: Bool
+    private let topic: String
+    
     private lazy var contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -29,7 +32,7 @@ class BridgeGateViewController: UIViewController {
     private lazy var descTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "-"
-        label.textColor = .black
+        label.textColor = UIColor(named: "Text")
         label.numberOfLines = 0
 
         let customParagraphStyle = NSMutableParagraphStyle()
@@ -54,7 +57,7 @@ class BridgeGateViewController: UIViewController {
     private lazy var descSubLabel: UILabel = {
         let label = UILabel()
         label.text = "-"
-        label.textColor = .black
+        label.textColor = UIColor(named: "Text")
         label.numberOfLines = 0
 
         
@@ -75,13 +78,25 @@ class BridgeGateViewController: UIViewController {
         return label
     }()
     
+    init(autoDismiss: Bool, topic: String = "") {
+        self.autoDismiss = autoDismiss
+        self.topic = topic
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupBrdigeGateView()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            self.dismiss(animated: true, completion: nil)
+        if autoDismiss {
+            handleAutoDismiss()
+        } else {
+            navigateToReflectionChat()
         }
     }
     
@@ -94,7 +109,27 @@ class BridgeGateViewController: UIViewController {
     }
 }
 
-extension BridgeGateViewController {
+private extension BridgeGateViewController {
+    private func handleAutoDismiss() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+
+    private func navigateToReflectionChat() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            let vc = ReflectionChatViewController()
+            vc.topic = self.topic
+            
+            let navController = UINavigationController(rootViewController: vc)
+            navController.modalPresentationStyle = .fullScreen
+
+            self.present(navController, animated: false, completion: nil)
+        }
+    }
+}
+
+private extension BridgeGateViewController {
     private func setupBrdigeGateView() {
         self.view.backgroundColor = .systemBackground
         
@@ -142,35 +177,3 @@ extension BridgeGateViewController {
         
     }
 }
-
-
-//preview
-//#if canImport(SwiftUI) && DEBUG
-//import SwiftUI
-//struct UIViewControllerPreview<ViewController: UIViewController>: UIViewControllerRepresentable {
-//    func updateUIViewController(_ uiViewController: ViewController, context: Context) {
-//        //
-//    }
-//    
-//    let viewController: ViewController
-//
-//    init(_ builder: @escaping () -> ViewController) {
-//        viewController = builder()
-//    }
-//
-//    // MARK: - UIViewControllerRepresentable
-//    func makeUIViewController(context: Context) -> ViewController {
-//        viewController
-//    }
-//}
-//#endif
-//
-//struct BestInClassPreviews_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UIViewControllerPreview {
-//            // Return whatever controller you want to preview
-//            let vc = BridgeGateViewController()
-//            return vc
-//        }
-//    }
-//}
