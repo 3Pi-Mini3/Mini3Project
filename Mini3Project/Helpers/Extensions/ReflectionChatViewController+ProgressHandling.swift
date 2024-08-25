@@ -9,20 +9,18 @@ import Foundation
 
 extension ReflectionChatViewController {
     func updateProgressBar() {
-        let questionsPerPhase = viewModel.calculateQuestionsPerPhase()
-        let totalQuestions = viewModel.calculateTotalQuestions()
+        let totalQuestions = reflectionChatViewModel.calculateTotalQuestions()
+        let totalPhase = reflectionChatViewModel.calculateTotalPhase()
         
-        let questionsUpToCurrent = (0..<viewModel.currentPhaseIndex).map { viewModel.questions[$0].count }.reduce(0, +) + viewModel.currentQuestionIndex + 1
+        let questionsUpToCurrent = (0..<reflectionChatViewModel.currentPhaseIndex).map { reflectionChatViewModel.questions[$0].count }.reduce(0, +) + reflectionChatViewModel.currentQuestionIndex + 1
         let progress = Float(questionsUpToCurrent) / Float(totalQuestions)
         
         progressBarView.updateProgressBar(progress)
-        
-        progressBarView.updateProgressLabel(text: "\(viewModel.currentQuestionIndex + 1) of \(questionsPerPhase)")
     }
     
-    func startProgressLabel() {  
-        let questionsPerPhase = viewModel.calculateQuestionsPerPhase()
+    func updateProgressLabel() {  
+        let totalPhase = reflectionChatViewModel.calculateTotalPhase()
         
-        progressBarView.updateProgressLabel(text: "0 of \(questionsPerPhase)")
+        progressBarView.updateProgressLabel(text: "\(reflectionChatViewModel.currentPhaseIndex + 1) of \(totalPhase)")
     }
 }

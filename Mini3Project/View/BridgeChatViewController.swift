@@ -28,7 +28,7 @@ class BridgeChatViewController: UIViewController {
     private lazy var descTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "You will go through 4 stages to recognize your strengths!"
-        label.textColor = .black
+        label.textColor = UIColor(named: "Text")
         label.numberOfLines = 0
 
         let customParagraphStyle = NSMutableParagraphStyle()
@@ -53,7 +53,7 @@ class BridgeChatViewController: UIViewController {
     private lazy var descSubLabel: UILabel = {
         let label = UILabel()
         label.text = "Let's make sure to do it correctly!"
-        label.textColor = .black
+        label.textColor = UIColor(named: "Text")
         label.numberOfLines = 0
         
         let customParagraphStyle = NSMutableParagraphStyle()
@@ -87,7 +87,7 @@ class BridgeChatViewController: UIViewController {
     private lazy var descTimeLabel: UILabel = {
         let label = UILabel()
         label.text = "10 min"
-        label.textColor = .black
+        label.textColor = UIColor(named: "Text")
         label.numberOfLines = 0
 
         let customParagraphStyle = NSMutableParagraphStyle()
@@ -113,7 +113,7 @@ class BridgeChatViewController: UIViewController {
         button.backgroundColor = UIColor(named: "BTint100")
         button.layer.cornerRadius = 10
         
-        let titleColor = UIColor(named: "ContrastText")!
+        let titleColor = UIColor.white
         
         let attributedText = NSAttributedString(
             string: "Start exploration 􀄫",
@@ -139,14 +139,11 @@ class BridgeChatViewController: UIViewController {
     @objc func startExplorationButtonTapped() {
         let vc = ProjectTitleInputViewController()
         
-        let navController = UINavigationController(rootViewController: vc)
-        navController.modalPresentationStyle = .fullScreen
+        let backButton = UIBarButtonItem()
+        backButton.title = "Skills"
+        navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         
-        // Customize the back button if needed
-        let backButton = UIBarButtonItem(title: "Skills", style: .plain, target: self, action: #selector(dismissChatViewController))
-        vc.navigationItem.leftBarButtonItem = backButton
-
-        present(navController, animated: true, completion: nil)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func dismissChatViewController() {
@@ -224,7 +221,7 @@ extension BridgeChatViewController {
         NSLayoutConstraint.activate([
             startButton.heightAnchor.constraint(equalToConstant: 46),
             
-            startButton.topAnchor.constraint(equalTo: descTimeLabel.bottomAnchor, constant: 164),
+            startButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             startButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
             startButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
         ])

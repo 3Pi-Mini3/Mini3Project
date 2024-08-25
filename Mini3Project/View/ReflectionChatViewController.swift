@@ -9,7 +9,7 @@ import UIKit
 
 class ReflectionChatViewController: UIViewController {
     
-    var viewModel = ReflectionChatViewModel()
+    var reflectionChatViewModel = ReflectionChatViewModel()
     
     var topic: String?
     
@@ -25,7 +25,6 @@ class ReflectionChatViewController: UIViewController {
     private lazy var nextButton: UIButton = createNextButton()
     private lazy var backButton: UIButton = createBackButton()
     
-    
     lazy var mascotImageView: MascotImageView = createMascotImageView()
     lazy var progressBarView: ProgressBarView = createProgressBarView()
     lazy var confirmationView: ConfirmationView = createConfirmationBarView()
@@ -37,7 +36,7 @@ class ReflectionChatViewController: UIViewController {
         let backButtonItem = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = backButtonItem
         
-        viewModel.topic = self.topic!
+        reflectionChatViewModel.topic = self.topic!
         
         setupReflectionChatView()
         
@@ -45,7 +44,7 @@ class ReflectionChatViewController: UIViewController {
         setButtonHandling()
         dismissKB()
         
-        startProgressLabel()
+        updateProgressLabel()
         loadCurrentPhase()
     }
 }
@@ -53,12 +52,12 @@ class ReflectionChatViewController: UIViewController {
 // MARK: Load Bubble Chat
 private extension ReflectionChatViewController {
     private func loadCurrentPhase() {
-        viewModel.hasShownInitialMessage = false
-        loadAllQuestions(at: viewModel.currentQuestionIndex)
+        reflectionChatViewModel.hasShownInitialMessage = false
+        loadAllQuestions(at: reflectionChatViewModel.currentQuestionIndex)
     }
 
     private func loadAllQuestions(at index: Int) {
-        if !viewModel.hasShownInitialMessage {
+        if !reflectionChatViewModel.hasShownInitialMessage {
             loadFirstQuestion(at: index)
         } else {
             loadQuestions(at: index)
@@ -75,9 +74,9 @@ private extension ReflectionChatViewController {
             
             self.removeLastChatBubble()
             
-            if let question = self.viewModel.getCurrentQuestion() {
+            if let question = self.reflectionChatViewModel.getCurrentQuestion() {
                 self.addChatBubble(isLeft: true, text: question)
-                self.viewModel.updateReflections(with: "Question: \(question)\n")
+                self.reflectionChatViewModel.updateReflections(with: "Question: \(question)\n")
                 self.sendButton.isEnabled = true
                 self.updateProgressBar()
             }
@@ -94,9 +93,9 @@ private extension ReflectionChatViewController {
             
             self.removeLastChatBubble()
             
-            if let initialMessage = self.viewModel.getInitialMessage() { 
+            if let initialMessage = self.reflectionChatViewModel.getInitialMessage() { 
                 self.addChatBubble(isLeft: true, text: initialMessage)
-                self.viewModel.hasShownInitialMessage = true
+                self.reflectionChatViewModel.hasShownInitialMessage = true
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                     guard let self = self else { return }
@@ -108,9 +107,9 @@ private extension ReflectionChatViewController {
                         
                         self.removeLastChatBubble()
                         
-                        if let question = self.viewModel.getCurrentQuestion() {
+                        if let question = self.reflectionChatViewModel.getCurrentQuestion() {
                             self.addChatBubble(isLeft: true, text: question)
-                            self.viewModel.updateReflections(with: "Question: \(question)\n")
+                            self.reflectionChatViewModel.updateReflections(with: "Question: \(question)\n")
                             self.sendButton.isEnabled = true
                             self.updateProgressBar()
                         }
@@ -163,6 +162,7 @@ private extension ReflectionChatViewController {
     }
 }
 
+// MARK: Resizing TextView nad BottomView
 extension ReflectionChatViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         let size = CGSize(width: textView.frame.size.width, height: .infinity)
@@ -185,6 +185,9 @@ extension ReflectionChatViewController: UITextViewDelegate {
                 constraint.constant = textViewHeight + 29 + 10
             }
         }
+        
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
     }
 }
 
@@ -208,21 +211,21 @@ private extension ReflectionChatViewController {
     @objc private func sendButtonTapped() {
         guard let text = textView.text, !text.isEmpty else { return }
         addChatBubble(isLeft: false, text: text)
-        viewModel.updateReflections(with: "Answer: \(text)\n\n")
+        reflectionChatViewModel.updateReflections(with: "Answer: \(text)\n\n")
         textView.text = ""
         resetInputViewConstraints()
-        viewModel.moveToNextQuestion()
+        reflectionChatViewModel.moveToNextQuestion()
         
-        if viewModel.currentQuestionIndex < viewModel.questions[viewModel.currentPhaseIndex].count {
-            loadAllQuestions(at: viewModel.currentQuestionIndex)
+        if reflectionChatViewModel.currentQuestionIndex < reflectionChatViewModel.questions[reflectionChatViewModel.currentPhaseIndex].count {
+            loadAllQuestions(at: reflectionChatViewModel.currentQuestionIndex)
         } else {
-            viewModel.moveToNextPhase()
-            if viewModel.currentPhaseIndex < viewModel.questions.count {
+            reflectionChatViewModel.moveToNextPhase()
+            if reflectionChatViewModel.currentPhaseIndex < reflectionChatViewModel.questions.count {
                 showNextPhaseButton()
             } else {
                 self.view.endEditing(true)
                 
-                viewModel.generateSummaryAndSave()
+                reflectionChatViewModel.generateSummaryAndSave()
                 
                 let vc = BridgeNextViewController()
                 
@@ -235,12 +238,12 @@ private extension ReflectionChatViewController {
     }
     
     @objc private func nextPhaseButtonTapped() {
-        let vc = BridgeGateViewController()
+        let vc = BridgeGateViewController(autoDismiss: true)
         
         vc.updateContent(
-            imageName: BridgeGate.imageNames[viewModel.currentPhaseIndex - 1], 
-            titleText: BridgeGate.titles[viewModel.currentPhaseIndex - 1], 
-            subTitleText: BridgeGate.descriptions[viewModel.currentPhaseIndex - 1]
+            imageName: BridgeGate.imageNames[reflectionChatViewModel.currentPhaseIndex - 1], 
+            titleText: BridgeGate.titles[reflectionChatViewModel.currentPhaseIndex - 1], 
+            subTitleText: BridgeGate.descriptions[reflectionChatViewModel.currentPhaseIndex - 1]
         )
         
         let navController = UINavigationController(rootViewController: vc)
@@ -253,11 +256,10 @@ private extension ReflectionChatViewController {
         resetInputViewConstraints()
         restoreInputViewAppearance()
         
-        startProgressLabel()
-        
         self.view.endEditing(true)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
+            self.updateProgressLabel()
             self.loadCurrentPhase()
         }
     }
@@ -285,28 +287,15 @@ private extension ReflectionChatViewController {
     }
 
     private func showConfirmationView() {
-        view.addSubview(confirmationView)
+        let confirmationViewController = ConfirmationViewController()
         
-        NSLayoutConstraint.activate([
-            confirmationView.heightAnchor.constraint(equalToConstant: 476),
-            
-            confirmationView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            confirmationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            confirmationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
-        ])
+        confirmationViewController.modalPresentationStyle = .overCurrentContext
         
-        // Configure the confirmation view
-        confirmationView.onContinue = {
-            self.confirmationView.dismissAlert()
-        }
-        confirmationView.onExit = {
-            self.confirmationView.dismissAlert()
-            
-            let mainPage = CustomTabBarController()
-            self.navigationController?.pushViewController(mainPage, animated: false)
-        }
-        
-        confirmationView.presentAlert(in: self)
+        present(confirmationViewController, animated: false, completion: {
+            UIView.animate(withDuration: 0.3) {
+                confirmationViewController.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+            }
+        })
     }
 }
 
@@ -331,9 +320,8 @@ private extension ReflectionChatViewController {
             bottomViewHeightConstraint.constant = 87.0
         }
         
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
     }
 }
 

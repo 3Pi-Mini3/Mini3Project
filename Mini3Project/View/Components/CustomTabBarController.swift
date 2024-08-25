@@ -15,28 +15,32 @@ class CustomTabBarController: UITabBarController {
     let middleButtonBorderLayer = CAShapeLayer()
 
     override func viewDidLoad() {
-            super.viewDidLoad()
+        super.viewDidLoad()
 
-            setupTabBar()
+        setupTabBar()
 
-            let firstVC = SkillsViewController()
-            let secondVC = ReflectionsViewController(viewModel: ReflectionsViewModel())
+        let firstVC = SkillsViewController()
+        let secondVC = ReflectionsViewController(viewModel: ReflectionsViewModel())
 
-            let firstVCIcon = UIImage(systemName: "target")?.withRenderingMode(.alwaysOriginal)
-            let secondVCIcon = UIImage(systemName: "book.pages.fill")?.withRenderingMode(.alwaysOriginal)
+        let firstVCIcon = UIImage(systemName: "target")?.withRenderingMode(.alwaysOriginal)
+        let secondVCIcon = UIImage(systemName: "book.pages.fill")?.withRenderingMode(.alwaysOriginal)
 
-            firstVC.tabBarItem = UITabBarItem(title: "Skills", image: firstVCIcon, tag: 0)
-            secondVC.tabBarItem = UITabBarItem(title: "Reflection", image: secondVCIcon, tag: 1)
+        firstVC.tabBarItem = UITabBarItem(title: "Skills", image: firstVCIcon, tag: 0)
+        secondVC.tabBarItem = UITabBarItem(title: "Reflection", image: secondVCIcon, tag: 1)
 
-            viewControllers = [firstVC, secondVC]
+        viewControllers = [firstVC, secondVC]
 
-            setupMiddleButton()
-        }
+        setupMiddleButton()
+        
+        registerForTraitChanges([UITraitUserInterfaceStyle.self], handler: { (self: Self, previousTraitCollection: UITraitCollection) in
+            self.shapeLayer.fillColor = UIColor(named: "TabBarBG")?.cgColor
+        })
+    }
 
 
     func setupTabBar() {
         shapeLayer.path = createCurvePath()
-        shapeLayer.fillColor = UIColor.white.cgColor
+        shapeLayer.fillColor = UIColor(named: "TabBarBG")?.cgColor
         shapeLayer.backgroundColor = UIColor.clear.cgColor
         shapeLayer.shadowColor = UIColor.black.cgColor
         shapeLayer.shadowOffset = CGSize(width: 0, height: 4)
@@ -52,9 +56,9 @@ class CustomTabBarController: UITabBarController {
         tabBar.layer.addSublayer(tabBarBorderLayer)
 
         tabBar.isTranslucent = false
-        tabBar.backgroundColor = UIColor.white
+        tabBar.backgroundColor = .systemBackground
         tabBar.tintColor = UIColor(named: "BTint100")
-        tabBar.unselectedItemTintColor = .gray
+        tabBar.unselectedItemTintColor = UIColor(named: "TabBarUnselected")
     }
 
     func createCurvePath() -> CGPath {
@@ -85,7 +89,7 @@ class CustomTabBarController: UITabBarController {
     func setupMiddleButton() {
         middleButton.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
         middleButton.layer.cornerRadius = 40
-        middleButton.backgroundColor = UIColor(named: "Bluemarine")
+        middleButton.backgroundColor = UIColor(named: "BTint100")
         
         let plusImage = UIImage(systemName: "plus")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))
         middleButton.setImage(plusImage, for: .normal)
@@ -95,8 +99,8 @@ class CustomTabBarController: UITabBarController {
 
         let middleButtonBorderPath = UIBezierPath(ovalIn: middleButton.bounds.insetBy(dx: -2, dy: -2))
         middleButtonBorderLayer.path = middleButtonBorderPath.cgPath
-        middleButtonBorderLayer.strokeColor = UIColor.white.cgColor
-        middleButtonBorderLayer.lineWidth = 4
+//        middleButtonBorderLayer.strokeColor = UIColor.white.cgColor
+//        middleButtonBorderLayer.lineWidth = 4
         middleButtonBorderLayer.fillColor = UIColor.clear.cgColor
         middleButton.layer.addSublayer(middleButtonBorderLayer)
 
@@ -112,14 +116,11 @@ class CustomTabBarController: UITabBarController {
     @objc func middleButtonTapped() {
         let vc = BridgeChatViewController()
         
-        let navController = UINavigationController(rootViewController: vc)
-        navController.modalPresentationStyle = .fullScreen
+        let backButton = UIBarButtonItem()
+        backButton.title = "Skills"
+        navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         
-        // Customize the back button if needed
-        let backButton = UIBarButtonItem(title: "Skills", style: .plain, target: self, action: #selector(dismissChatViewController))
-        vc.navigationItem.leftBarButtonItem = backButton
-
-        present(navController, animated: true, completion: nil)
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     @objc func dismissChatViewController() {
